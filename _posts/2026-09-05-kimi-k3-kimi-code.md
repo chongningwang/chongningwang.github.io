@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Kimi K3 + Kimi Code
-date: 2026-09-05 10:00:00
+date: 2026-09-05 08:00:00
 description: I started using Kimi and Kimi Code — and this website was built by them.
 tags: tools
 categories: blog
