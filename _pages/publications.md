@@ -13,8 +13,18 @@ nav_order: 2
 
 {% include bib_search.liquid %}
 
+<h2 class="bibliography">Publications</h2>
+
 <div class="publications">
 
-{% bibliography %}
+{% bibliography --query @article %}
+
+</div>
+
+<h2 class="bibliography">Preprints</h2>
+
+<div class="publications">
+
+{% bibliography --query @misc %}
 
 </div>
