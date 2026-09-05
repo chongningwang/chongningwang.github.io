@@ -1,7 +1,7 @@
 # this file contains the social media links and usernames of the author
 # the socials will be displayed in the order they are defined here
 # for more information, please refer to the documentation of jekyll-socials plugin: https://github.com/george-gca/jekyll-socials
-cv_pdf: /assets/pdf/example_pdf.pdf # TODO: replace with your CV, e.g. /assets/pdf/cv.pdf
+cv_pdf: /assets/pdf/cv.pdf
 email: chongningwang@hbmzu.edu.cn
 # github_user: chongningwang # uncomment and set your GitHub username
 # orcid_id: # your ORCID ID, e.g. 0000-0000-0000-0000
