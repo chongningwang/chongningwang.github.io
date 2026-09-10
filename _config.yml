@@ -2,7 +2,7 @@
 # Site settings
 # -----------------------------------------------------------------------------
 
-title: blank # the website title (if blank, full name will be used instead)
+title: cnmr # the website title (if blank, full name will be used instead)
 first_name: Chongning
 last_name: Wang
 contact_note: >
