@@ -1,1 +1,188 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chongningwang.github.io/feed.xml" rel="self" type="application/atom+xml"/><link href="https://chongningwang.github.io/" rel="alternate" type="text/html" hreflang="en"/><updated>2026-09-05T10:57:13+08:00</updated><id>https://chongningwang.github.io/feed.xml</id><title type="html">blank</title><subtitle>Chongning Wang (王崇宁), Lecturer at the School of Mathematics and Statistics, Hubei Minzu University. Research interests: algebraic geometry, mainly the classification of algebraic varieties in positive characteristic. </subtitle><entry><title type="html">Kimi K3 + Kimi Code</title><link href="https://chongningwang.github.io/blog/2026/kimi-k3-kimi-code/" rel="alternate" type="text/html" title="Kimi K3 + Kimi Code"/><published>2026-09-05T08:00:00+08:00</published><updated>2026-09-05T08:00:00+08:00</updated><id>https://chongningwang.github.io/blog/2026/kimi-k3-kimi-code</id><content type="html" xml:base="https://chongningwang.github.io/blog/2026/kimi-k3-kimi-code/"><![CDATA[<p>I recently started using <strong>Kimi</strong>, the AI assistant built on the K3 flagship model, together with <strong>Kimi Code</strong>, its programming agent that works in the terminal.</p> <p>This website is the first fruit of that: I made the entire homepage — from choosing the al-folio template, writing the configuration and biography, to adding my publications and deploying it to GitHub Pages — in conversation with Kimi Code. The model read my old homepage and my faculty page, filled in my information, cropped my portrait, and pushed every change; I only reviewed and directed.</p> <p>I plan to keep writing here about algebraic geometry, and probably more about my experience using AI tools in research and daily work.</p>]]></content><author><name></name></author><category term="blog"/><category term="tools"/><summary type="html"><![CDATA[I started using Kimi and Kimi Code — and this website was built by them.]]></summary></entry></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chongningwang.github.io/feed.xml" rel="self" type="application/atom+xml"/><link href="https://chongningwang.github.io/" rel="alternate" type="text/html" hreflang="en"/><updated>2026-09-10T09:08:03+08:00</updated><id>https://chongningwang.github.io/feed.xml</id><title type="html">blank</title><subtitle>Chongning Wang (王崇宁), Lecturer at the School of Mathematics and Statistics, Hubei Minzu University. Research interests: algebraic geometry, mainly the classification of algebraic varieties in positive characteristic. </subtitle><entry><title type="html">Let Vim Ask an AI to Name Your LaTeX Labels</title><link href="https://chongningwang.github.io/blog/2026/vim-ai-latex-labels/" rel="alternate" type="text/html" title="Let Vim Ask an AI to Name Your LaTeX Labels"/><published>2026-09-10T08:00:00+08:00</published><updated>2026-09-10T08:00:00+08:00</updated><id>https://chongningwang.github.io/blog/2026/vim-ai-latex-labels</id><content type="html" xml:base="https://chongningwang.github.io/blog/2026/vim-ai-latex-labels/"><![CDATA[<p>When writing LaTeX, I constantly need <code class="language-plaintext highlighter-rouge">\label{...}</code> for equations, theorems, lemmas, and sections — and I constantly waste time inventing names like <code class="language-plaintext highlighter-rouge">eq:adjunction-unit</code> by hand. So I wired Vim to an AI model: put the cursor on the line, press <code class="language-plaintext highlighter-rouge">&lt;leader&gt;lj</code>, and a context-aware label appears automatically.</p> <h2 id="what-latexinsertlabel-does">What <code class="language-plaintext highlighter-rouge">LatexInsertLabel</code> does</h2> <p>The function lives in my <code class="language-plaintext highlighter-rouge">~/.vimrc</code> (it uses Vim9 script syntax, so it needs <strong>Vim 9</strong>). In one call it:</p> <ol> <li><strong>Builds a prompt.</strong> It reads a small instruction file (<code class="language-plaintext highlighter-rouge">~/.vim/skills/latex-label.md</code>) that tells the model the naming rules, then appends the current line as the <code class="language-plaintext highlighter-rouge">TARGET TO LABEL</code> plus 12 lines of surrounding context above and below.</li> <li><strong>Calls the AI.</strong> It first tries a Python helper (<code class="language-plaintext highlighter-rouge">~/.vim/scripts/kimi-label.py</code>) which streams the reply from the <code class="language-plaintext highlighter-rouge">kimi</code> CLI and returns as soon as the first assistant message arrives (with a 12-second safety timeout). If the helper is missing or returns nothing, it falls back to calling <code class="language-plaintext highlighter-rouge">kimi --output-format stream-json</code> directly and parses the JSON lines itself, with a couple of extra regex-based fallbacks.</li> <li><strong>Sanitizes the answer.</strong> Whatever the model says, it extracts just the label body (the part inside <code class="language-plaintext highlighter-rouge">\label{...}</code>, or the first label-shaped token).</li> <li><strong>Inserts it intelligently.</strong> It splits the current line into code and trailing comment (respecting escaped <code class="language-plaintext highlighter-rouge">\%</code>), then: <ul> <li>if the line already has a <code class="language-plaintext highlighter-rouge">\label{...}</code>, it <strong>replaces</strong> the name in place;</li> <li>if the line contains <code class="language-plaintext highlighter-rouge">\end{...}</code>, it inserts the label <strong>on the line before</strong>;</li> <li>if the line is blank, it writes the label on that line;</li> <li>otherwise it appends the label to the end of the code part, before the comment.</li> </ul> </li> </ol> <p>So pressing <code class="language-plaintext highlighter-rouge">&lt;leader&gt;lj</code> again on the same line re-names the label instead of duplicating it — handy when the first suggestion is not good enough.</p> <p>The key mapping is buffer-local for TeX files:</p> <div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>autocmd <span class="nb">FileType</span> tex nnoremap <span class="p">&lt;</span><span class="k">buffer</span><span class="p">&gt;</span> <span class="p">&lt;</span>leader<span class="p">&gt;</span>lj <span class="p">&lt;</span>ScriptCmd<span class="p">&gt;</span><span class="nv">g:LatexInsertLabel</span><span class="p">()&lt;</span>CR<span class="p">&gt;</span>
+</code></pre></div></div> <h2 id="the-function">The function</h2> <p>Here is the complete code, exactly as it sits in my <code class="language-plaintext highlighter-rouge">~/.vimrc</code>:</p> <div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Insert \label<span class="p">{</span>eq<span class="p">:...}</span> <span class="k">on</span> the current <span class="nb">line</span> using Kimi <span class="p">(</span>no need <span class="k">to</span> <span class="nb">type</span> \label<span class="p">{})</span>
+# Cursor <span class="k">on</span> the equation / theorem <span class="nb">line</span><span class="p">,</span> then <span class="p">&lt;</span>leader<span class="p">&gt;</span>lj
+<span class="k">def</span> <span class="nv">g:LatexInsertLabel</span><span class="p">()</span>
+  var skillfile <span class="p">=</span> <span class="nb">expand</span><span class="p">(</span><span class="s1">'~/.vim/skills/latex-label.md'</span><span class="p">)</span>
+  <span class="k">if</span> <span class="p">!</span><span class="nb">filereadable</span><span class="p">(</span>skillfile<span class="p">)</span>
+    <span class="k">echoerr</span> <span class="s1">'Missing '</span> <span class="p">..</span> skillfile
+    <span class="k">return</span>
+  <span class="k">endif</span>
+  var skill <span class="p">=</span> <span class="nb">readfile</span><span class="p">(</span>skillfile<span class="p">)-&gt;</span><span class="k">join</span><span class="p">(</span><span class="s2">"\n"</span><span class="p">)</span>
+  var cur_line <span class="p">=</span> <span class="nb">getline</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)</span>
+  var start_line <span class="p">=</span> <span class="nb">max</span><span class="p">([</span><span class="m">1</span><span class="p">,</span> <span class="nb">line</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)</span> <span class="p">-</span> <span class="m">12</span><span class="p">])</span>
+  var end_line <span class="p">=</span> <span class="nb">min</span><span class="p">([</span><span class="nb">line</span><span class="p">(</span><span class="s1">'$'</span><span class="p">),</span> <span class="nb">line</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)</span> <span class="p">+</span> <span class="m">12</span><span class="p">])</span>
+  var ctx <span class="p">=</span> <span class="nb">getline</span><span class="p">(</span>start_line<span class="p">,</span> end_line<span class="p">)-&gt;</span><span class="k">join</span><span class="p">(</span><span class="s2">"\n"</span><span class="p">)</span>
+  var <span class="nb">prompt</span> <span class="p">=</span> skill <span class="p">..</span> <span class="s2">"\n\nTARGET TO LABEL:\n"</span> <span class="p">..</span> cur_line <span class="p">..</span> <span class="s2">"\n\nSURROUNDING CONTEXT:\n"</span> <span class="p">..</span> ctx
+
+  echo <span class="s1">'Naming label...'</span>
+  <span class="k">redraw</span>
+  var helper <span class="p">=</span> <span class="nb">expand</span><span class="p">(</span><span class="s1">'~/.vim/scripts/kimi-label.py'</span><span class="p">)</span>
+  var name <span class="p">=</span> <span class="s1">''</span>
+  <span class="k">if</span> <span class="nb">filereadable</span><span class="p">(</span>helper<span class="p">)</span>
+    name <span class="p">=</span> <span class="nb">system</span><span class="p">(</span>helper<span class="p">,</span> <span class="nb">prompt</span><span class="p">)-&gt;</span><span class="nb">trim</span><span class="p">()</span>
+  <span class="k">endif</span>
+
+  <span class="k">if</span> name <span class="p">==</span> <span class="s1">''</span>
+    var cmd <span class="p">=</span> <span class="s1">'kimi --output-format stream-json -m kimi-code/kimi-for-coding-highspeed -p '</span> <span class="p">..</span> <span class="nb">shellescape</span><span class="p">(</span><span class="nb">prompt</span><span class="p">)</span>
+    var raw <span class="p">=</span> <span class="nb">system</span><span class="p">(</span>cmd<span class="p">)</span>
+    <span class="k">if</span> <span class="k">v</span><span class="p">:</span>shell_error <span class="p">!=</span> <span class="m">0</span>
+      <span class="k">echoerr</span> <span class="s1">'kimi failed: '</span> <span class="p">..</span> raw
+      <span class="k">return</span>
+    <span class="k">endif</span>
+
+    <span class="k">for</span> item <span class="k">in</span> <span class="k">split</span><span class="p">(</span>raw<span class="p">,</span> <span class="s2">"[\r\n]\\+"</span><span class="p">)</span>
+      <span class="k">if</span> item <span class="p">=~</span> <span class="s1">'^{"role":"assistant"'</span>
+        <span class="k">try</span>
+          var data <span class="p">=</span> <span class="nb">json_decode</span><span class="p">(</span>item<span class="p">)</span>
+          <span class="k">if</span> <span class="nb">type</span><span class="p">(</span>data<span class="p">)</span> <span class="p">==</span> <span class="k">v</span><span class="p">:</span>t_dict &amp;&amp; <span class="nb">has_key</span><span class="p">(</span>data<span class="p">,</span> <span class="s1">'content'</span><span class="p">)</span>
+            name <span class="p">=</span> data<span class="p">.</span>content
+            <span class="k">break</span>
+          <span class="k">endif</span>
+        <span class="k">catch</span>
+        <span class="k">endtry</span>
+      <span class="k">endif</span>
+    <span class="k">endfor</span>
+
+    <span class="k">if</span> name <span class="p">==</span> <span class="s1">''</span>
+      name <span class="p">=</span> <span class="nb">matchstr</span><span class="p">(</span>raw<span class="p">,</span> <span class="s1">'"role":\s*"assistant",\s*"content":\s*"\zs[^"]*\ze"'</span><span class="p">)</span>
+    <span class="k">endif</span>
+
+    <span class="k">if</span> name <span class="p">==</span> <span class="s1">''</span>
+      <span class="k">for</span> item <span class="k">in</span> <span class="nb">reverse</span><span class="p">(</span><span class="k">split</span><span class="p">(</span>raw<span class="p">,</span> <span class="s2">"[\r\n]\\+"</span><span class="p">))</span>
+        <span class="k">if</span> item <span class="p">!~</span>? <span class="s1">'^\s*\(kimi\|to resume\|error\|{\)'</span> &amp;&amp; item <span class="p">=~</span> <span class="s1">'[A-Za-z]'</span>
+          name <span class="p">=</span> item
+          <span class="k">break</span>
+        <span class="k">endif</span>
+      <span class="k">endfor</span>
+    <span class="k">endif</span>
+  <span class="k">endif</span>
+
+  var label_body <span class="p">=</span> <span class="nb">matchstr</span><span class="p">(</span>name<span class="p">,</span> <span class="s1">'\\label{\zs[A-Za-z0-9_:.+-]\+\ze}'</span><span class="p">)</span>
+  <span class="k">if</span> label_body <span class="p">==</span> <span class="s1">''</span>
+    label_body <span class="p">=</span> <span class="nb">matchstr</span><span class="p">(</span>name<span class="p">,</span> <span class="s1">'[A-Za-z][A-Za-z0-9_:.+-]*'</span><span class="p">)</span>
+  <span class="k">endif</span>
+  name <span class="p">=</span> label_body
+
+  <span class="k">if</span> name <span class="p">==</span> <span class="s1">''</span>
+    <span class="k">echoerr</span> <span class="s1">'model returned no label'</span>
+    <span class="k">return</span>
+  <span class="k">endif</span>
+
+  var <span class="k">l</span> <span class="p">=</span> <span class="nb">getline</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)</span>
+  var comment_idx <span class="p">=</span> <span class="k">match</span><span class="p">(</span><span class="k">l</span><span class="p">,</span> <span class="s1">'\(^\|[^\\]\)\(\\\\\)*\zs%'</span><span class="p">)</span>
+  var code <span class="p">=</span> <span class="s1">''</span>
+  var comment <span class="p">=</span> <span class="s1">''</span>
+  <span class="k">if</span> comment_idx <span class="p">&gt;=</span> <span class="m">0</span>
+    code <span class="p">=</span> <span class="nb">strpart</span><span class="p">(</span><span class="k">l</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> comment_idx<span class="p">)</span>
+    comment <span class="p">=</span> <span class="nb">strpart</span><span class="p">(</span><span class="k">l</span><span class="p">,</span> comment_idx<span class="p">)</span>
+  <span class="k">else</span>
+    code <span class="p">=</span> <span class="k">l</span>
+    comment <span class="p">=</span> <span class="s1">''</span>
+  <span class="k">endif</span>
+
+  comment <span class="p">=</span> <span class="nb">substitute</span><span class="p">(</span>comment<span class="p">,</span> <span class="s1">'\s*\\label{[^}]*}'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">)</span>
+
+  <span class="k">if</span> code <span class="p">=~</span> <span class="s1">'\\label{'</span>
+    code <span class="p">=</span> <span class="nb">substitute</span><span class="p">(</span>code<span class="p">,</span> <span class="s1">'\\label{\zs[^}]*'</span><span class="p">,</span> name<span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+    <span class="nb">setline</span><span class="p">(</span><span class="s1">'.'</span><span class="p">,</span> code <span class="p">..</span> comment<span class="p">)</span>
+    echo <span class="s1">'updated \label{'</span> <span class="p">..</span> name <span class="p">..</span> <span class="s1">'}'</span>
+    <span class="k">return</span>
+  <span class="k">endif</span>
+
+  <span class="k">if</span> code <span class="p">=~</span> <span class="s1">'\\end{'</span>
+    <span class="nb">append</span><span class="p">(</span><span class="nb">line</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)</span> <span class="p">-</span> <span class="m">1</span><span class="p">,</span> <span class="nb">matchstr</span><span class="p">(</span><span class="k">l</span><span class="p">,</span> <span class="s1">'^\s*'</span><span class="p">)</span> <span class="p">..</span> <span class="s1">'\label{'</span> <span class="p">..</span> name <span class="p">..</span> <span class="s1">'}'</span><span class="p">)</span>
+    echo <span class="s1">'inserted \label{'</span> <span class="p">..</span> name <span class="p">..</span> <span class="s1">'}'</span>
+    <span class="k">return</span>
+  <span class="k">endif</span>
+
+  <span class="k">if</span> code <span class="p">=~</span> <span class="s1">'^\s*$'</span>
+    <span class="k">if</span> comment <span class="p">!=</span> <span class="s1">''</span>
+      <span class="nb">setline</span><span class="p">(</span><span class="s1">'.'</span><span class="p">,</span> <span class="nb">matchstr</span><span class="p">(</span>code<span class="p">,</span> <span class="s1">'^\s*'</span><span class="p">)</span> <span class="p">..</span> <span class="s1">'\label{'</span> <span class="p">..</span> name <span class="p">..</span> <span class="s1">'} '</span> <span class="p">..</span> comment<span class="p">)</span>
+    <span class="k">else</span>
+      <span class="nb">setline</span><span class="p">(</span><span class="s1">'.'</span><span class="p">,</span> <span class="nb">matchstr</span><span class="p">(</span>code<span class="p">,</span> <span class="s1">'^\s*'</span><span class="p">)</span> <span class="p">..</span> <span class="s1">'\label{'</span> <span class="p">..</span> name <span class="p">..</span> <span class="s1">'}'</span><span class="p">)</span>
+    <span class="k">endif</span>
+    echo <span class="s1">'inserted \label{'</span> <span class="p">..</span> name <span class="p">..</span> <span class="s1">'}'</span>
+    <span class="k">return</span>
+  <span class="k">endif</span>
+
+  code <span class="p">=</span> <span class="nb">substitute</span><span class="p">(</span>code<span class="p">,</span> <span class="s1">'\s*$'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+  var sep <span class="p">=</span> <span class="p">(</span>code <span class="p">=~</span> <span class="s1">'[A-Za-z0-9]$'</span><span class="p">)</span> ? <span class="s1">' '</span> <span class="p">:</span> <span class="s1">''</span>
+  code <span class="p">=</span> code <span class="p">..</span> sep <span class="p">..</span> <span class="s1">'\label{'</span> <span class="p">..</span> name <span class="p">..</span> <span class="s1">'}'</span>
+
+  <span class="nb">setline</span><span class="p">(</span><span class="s1">'.'</span><span class="p">,</span> code <span class="p">..</span> comment<span class="p">)</span>
+  echo <span class="s1">'inserted \label{'</span> <span class="p">..</span> name <span class="p">..</span> <span class="s1">'}'</span>
+<span class="k">enddef</span>
+augroup latex_insert_label
+  autocmd<span class="p">!</span>
+  autocmd <span class="nb">FileType</span> tex nnoremap <span class="p">&lt;</span><span class="k">buffer</span><span class="p">&gt;</span> <span class="p">&lt;</span>leader<span class="p">&gt;</span>lj <span class="p">&lt;</span>ScriptCmd<span class="p">&gt;</span><span class="nv">g:LatexInsertLabel</span><span class="p">()&lt;</span>CR<span class="p">&gt;</span>
+augroup END
+</code></pre></div></div> <h2 id="where-to-put-it">Where to put it</h2> <p>The function itself goes into your <code class="language-plaintext highlighter-rouge">~/.vimrc</code>, anywhere at the top level (the <code class="language-plaintext highlighter-rouge">def g:</code> form and <code class="language-plaintext highlighter-rouge">&lt;ScriptCmd&gt;</code> mapping require Vim 9). The two helper files it calls live under <code class="language-plaintext highlighter-rouge">~/.vim/</code>:</p> <ul> <li><code class="language-plaintext highlighter-rouge">~/.vim/skills/latex-label.md</code> — the prompt that defines the naming rules;</li> <li><code class="language-plaintext highlighter-rouge">~/.vim/scripts/kimi-label.py</code> — the streaming helper script (make it executable: <code class="language-plaintext highlighter-rouge">chmod +x</code>).</li> </ul> <p>You also need the <a href="https://www.kimi.com/code"><code class="language-plaintext highlighter-rouge">kimi</code> CLI</a> installed and logged in, since that is what actually talks to the model.</p> <h2 id="the-prompt-file">The prompt file</h2> <p><code class="language-plaintext highlighter-rouge">~/.vim/skills/latex-label.md</code> is deliberately terse — short prompts answer faster and more predictably:</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>You invent a LaTeX <span class="se">\l</span>abel name from the nearby source.
+
+Rules:
+<span class="p">-</span> Reply with ONLY the label body, e.g. eq:adjunction
+<span class="p">-</span> No backslash, no <span class="se">\l</span>abel, no braces, no quotes, no extra words
+<span class="p">-</span> Do not use tools or edit files
+<span class="p">-</span> Prefixes: eq: thm: lem: prop: cor: def: sec: fig:
+<span class="p">-</span> Short, stable, ASCII: English or standard math tokens
+<span class="p">-</span> Do not copy an existing label from the excerpt
+<span class="p">-</span> Reply immediately without thinking or explanation
+</code></pre></div></div> <p>Because the context window around the cursor is included, the model tends to pick up the actual theorem or equation content — e.g. <code class="language-plaintext highlighter-rouge">\label{thm:serre-vanishing}</code> next to a statement about Serre vanishing — instead of a generic name.</p> <h2 id="the-helper-script">The helper script</h2> <p><code class="language-plaintext highlighter-rouge">~/.vim/scripts/kimi-label.py</code> reads the prompt from its argument or stdin, launches the CLI, and returns the label as soon as the first assistant message streams in (killing the process afterwards so Vim does not wait for the full session to end):</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span><span class="kn">import</span> <span class="n">sys</span><span class="p">,</span> <span class="n">subprocess</span><span class="p">,</span> <span class="n">json</span><span class="p">,</span> <span class="n">re</span><span class="p">,</span> <span class="n">time</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">stdin</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">prompt</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">prompt</span><span class="p">.</span><span class="nf">strip</span><span class="p">():</span>
+        <span class="k">return</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sh">"</span><span class="s">kimi</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--output-format</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">stream-json</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">-m</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">kimi-code/kimi-for-coding-highspeed</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">-p</span><span class="sh">"</span><span class="p">,</span> <span class="n">prompt</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span>
+    <span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="nc">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="p">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="p">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Error starting kimi: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="nf">time</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">p</span><span class="p">.</span><span class="n">stdout</span><span class="p">:</span>
+            <span class="c1"># safety timeout: 12 seconds max
+</span>            <span class="k">if</span> <span class="n">time</span><span class="p">.</span><span class="nf">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="sh">'"</span><span class="s">role</span><span class="sh">"</span><span class="s">:</span><span class="sh">"</span><span class="s">assistant</span><span class="sh">"'</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="nf">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">content</span><span class="sh">"</span><span class="p">,</span> <span class="sh">""</span><span class="p">).</span><span class="nf">strip</span><span class="p">()</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">\\label\{([^}]+)\}</span><span class="sh">'</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                        <span class="nf">print</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">m_word</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">[A-Za-z][A-Za-z0-9_:.+-]*</span><span class="sh">'</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">m_word</span><span class="p">:</span>
+                            <span class="nf">print</span><span class="p">(</span><span class="n">m_word</span><span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="nf">print</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+                <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+                    <span class="nf">print</span><span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">())</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">p</span><span class="p">.</span><span class="nf">kill</span><span class="p">()</span>
+                <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">return</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="sh">"</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">p</span><span class="p">.</span><span class="nf">kill</span><span class="p">()</span>
+        <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div> <h2 id="notes">Notes</h2> <ul> <li>The whole round trip takes about a second with the high-speed model, which is much faster than me deliberating over <code class="language-plaintext highlighter-rouge">prop:finite-type-base-change</code> vs <code class="language-plaintext highlighter-rouge">prop:bc-finite-type</code>.</li> <li>The fallback path inside the Vim function means the mapping still works even if the Python helper is missing — it is just slower because it waits for the CLI to exit.</li> <li>The same pattern generalizes: any “look at the cursor’s neighborhood and do something small” task (generating BibTeX keys, caption text, proof remarks) can reuse this skeleton with a different skill file.</li> </ul>]]></content><author><name></name></author><category term="blog"/><category term="tools"/><summary type="html"><![CDATA[A Vim9 function that sends the current line and its surrounding context to an AI model and inserts a sensible \label{...} for you — one keystroke, no more naming by hand.]]></summary></entry><entry><title type="html">Kimi K3 + Kimi Code</title><link href="https://chongningwang.github.io/blog/2026/kimi-k3-kimi-code/" rel="alternate" type="text/html" title="Kimi K3 + Kimi Code"/><published>2026-09-05T08:00:00+08:00</published><updated>2026-09-05T08:00:00+08:00</updated><id>https://chongningwang.github.io/blog/2026/kimi-k3-kimi-code</id><content type="html" xml:base="https://chongningwang.github.io/blog/2026/kimi-k3-kimi-code/"><![CDATA[<p>I recently started using <strong>Kimi</strong>, the AI assistant built on the K3 flagship model, together with <strong>Kimi Code</strong>, its programming agent that works in the terminal.</p> <p>This website is the first fruit of that: I made the entire homepage — from choosing the al-folio template, writing the configuration and biography, to adding my publications and deploying it to GitHub Pages — in conversation with Kimi Code. The model read my old homepage and my faculty page, filled in my information, cropped my portrait, and pushed every change; I only reviewed and directed.</p> <p>I plan to keep writing here about algebraic geometry, and probably more about my experience using AI tools in research and daily work.</p>]]></content><author><name></name></author><category term="blog"/><category term="tools"/><summary type="html"><![CDATA[I started using Kimi and Kimi Code — and this website was built by them.]]></summary></entry></feed>
