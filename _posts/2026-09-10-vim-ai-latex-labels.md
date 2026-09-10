@@ -24,12 +24,6 @@ The function lives in my `~/.vimrc` (it uses Vim9 script syntax, so it needs **V
 
 So pressing `<leader>lj` again on the same line re-names the label instead of duplicating it — handy when the first suggestion is not good enough.
 
-The key mapping is buffer-local for TeX files:
-
-```vim
-autocmd FileType tex nnoremap <buffer> <leader>lj <ScriptCmd>g:LatexInsertLabel()<CR>
-```
-
 ## The function
 
 Here is the complete code, exactly as it sits in my `~/.vimrc`:
