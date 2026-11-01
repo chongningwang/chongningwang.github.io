@@ -1,8 +1,8 @@
 ---
 layout: course
 title: Character Theory (特征标理论)
-description: A three-hour lecture on complex representations of finite groups and their characters. It covers the orthogonality relations, the decomposition of the regular representation, the number of irreducible representations, induced representations with an application to a group of order 21, and the divisibility of character degrees.
-instructor: 王崇宁 (Chongning Wang)
+description: A short lecture, taught jointly with Professor Rulin Shen, on complex representations of finite groups and their characters. It covers the orthogonality relations, the decomposition of the regular representation, the number of irreducible representations, induced representations with an application to a group of order 21, and the divisibility of character degrees.
+instructor: 王崇宁 (Chongning Wang), jointly with Professor Rulin Shen
 year: 2026
 term: Autumn
 course_id: character-theory
