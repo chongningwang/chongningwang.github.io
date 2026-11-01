@@ -9,9 +9,9 @@ profile:
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>School of Mathematics and Statistics</p>
-    <p>Hubei Minzu University</p>
-    <p>Enshi, Hubei, China</p>
+    <p>湖北民族大学</p>
+    <p>数学与统计学院</p>
+    <p>湖北省恩施市</p>
     <p>chongningwang@hbmzu.edu.cn</p>
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
