@@ -7,7 +7,7 @@ first_name: Chongning
 last_name: Wang
 contact_note: >
   The best way to reach me is via email.
-description: > # the ">" symbol means to ignore newlines until "footer_text:"
+description: >- # the ">-" symbol joins the lines and drops the final newline (keeps the Schema.org JSON valid)
   Chongning Wang (王崇宁), Lecturer at the School of Mathematics and Statistics, Hubei Minzu University.
   Research interests: algebraic geometry, mainly the classification of algebraic varieties in positive characteristic.
 footer_text: >
