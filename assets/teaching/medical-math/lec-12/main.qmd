@@ -1,0 +1,1129 @@
+---
+pagetitle: "高等数学 · 第12讲 · 定积分的概念与性质"
+lang: zh-CN
+filters: [student-picker-roster.lua]
+student-picker-csv: ../../HmathC/name.csv
+student-picker-scope: "MedicalHmath · lec-12"
+language:
+  crossref-def-title: "定义"
+  crossref-def-prefix: "定义"
+  crossref-thm-title: "定理"
+  crossref-thm-prefix: "定理"
+  crossref-cor-title: "推论"
+  crossref-cor-prefix: "推论"
+  crossref-exm-title: "例题"
+  crossref-exm-prefix: "例题"
+  crossref-exr-title: "练习题"
+  crossref-exr-prefix: "练习题"
+crossref:
+  custom:
+    - kind: float
+      key: hwk
+      reference-prefix: "作业"
+      caption-location: top
+format:
+  revealjs:
+    theme: simple
+    css: [slides.css, lecture-environments.css]
+    slide-level: 2
+    scroll-view:
+      activate: false
+      activation-width: 0
+    width: 1280
+    height: 960
+    margin: 0.06
+    transition: slide
+    background-transition: slide
+    slide-number: c/t
+    controls: true
+    auto-stretch: false
+    default-timing: 150
+    pdf-max-pages-per-slide: 1
+    embed-resources: true
+    html-math-method: mathml
+    footer: "高等数学 · 第12讲 · 定积分的概念与性质"
+    include-after-body: interactions.html
+---
+
+## 定积分的概念与性质 {#opening .cover background-color="#123c3a" footer=false data-timing="0"}
+
+::: {.eyebrow}
+高等数学 · 第 12 讲
+:::
+
+:::: {.cover-methods .course-sections}
+::: {.cover-method}
+第一小节
+
+曲边梯形的面积
+:::
+::: {.cover-method}
+第二小节
+
+定积分的定义
+:::
+::::
+
+::: {.cover-formula}
+$$A=\lim\limits_{\lambda\to0}\sum_{i=1}^n f(\xi_i)\Delta x_i.$$
+:::
+
+::: {.cover-route}
+从面积和式出发 → 理解定积分 → 运用基本性质
+:::
+
+::: {.notes}
+教材来源一：《医用高等数学（第三版）》§4.1及§4.2性质1—4，印刷页118—123；对应textbook-lec-12.pdf及textbook-lec-12/auto/textbook-lec-12.md。第124—125页的比较、估值、积分中值定理及平均值仍保留在deferred-properties.qmd，不纳入本讲。来源二：../../HmathC/section1/section1.md及section1_origin.pdf，《大学文科数学》§1.6一、二，印刷页38—42。两书的面积和式、定义、可积条件和性质互相核对；OCR中的λ→0、ξ_i、常数因子k等符号按原图校正。
+
+本讲范围：面积的分割、近似、求和与取极限；定积分定义、可积充分条件、几何意义、积分变量、换限、线性、常数积分与区间可加性。第一小节只用面积和式，第二小节引入定积分记号并使用上述性质。牛顿—莱布尼兹公式及原函数求值整节移到第13讲，本讲不提前使用；变上限积分求导、基本定理的完整证明及反常积分不在这两讲范围。
+
+共31页：总封面1页、小节封面2页、正文27页、作业1页；30页计入放映页码。总封面后保留5分钟的历史引入和4分钟的第10讲回顾。第一小节22分钟，第二小节54分30秒；data-timing合计85分30秒，按100分钟留14分30秒机动。安排3道例题，补充2个不可积反例；安排7组课堂练习（13个小题，含1道口头练习），其中新增2组、4个小题。6页独立练习共26分钟，含独立作答20分钟、反馈6分钟；口头练习包含在正弦面积例题的2分钟内。作业前用中点和计算正弦积分，作为定义的收束例题。
+
+新增练习集中在第二小节，按依赖顺序放置：定义后先重访奶龙四步动画，突出任意取点与最大宽度，再练习非等分黎曼和；确定常数放在线性与换限之后。所有新增题均标为教学补充，先给完整题干，解答按小题推进，保留幸运生与下载控件。作业12共4道大题，只列本讲范围内的题目；原牛顿—莱布尼兹计算题移入作业13。
+
+沿用reveal.js、1280×960、34px正文、54px二级标题与原生MathML。第10页上下和版式、第11页大奶龙四步动画、原练习1的图形解答、积分变量配色、题图分列及已调整的无框公式均保留。点名沿用../name.csv，独立记录范围MedicalHmath · lec-12，不改写名单或旧讲次。
+:::
+
+## 刘徽割圆：用直边逼近曲边 {#history-liu-hui .history-page data-timing="90"}
+
+::: {.eyebrow}
+刘徽 · 公元263年 · 《九章算术注》
+:::
+
+从圆内接正六边形开始，**每次平分圆弧，使边数加倍**。
+
+```{=html}
+<div class="circle-cutting" data-circle-cutting="inscribed">
+  <img class="circle-cutting-fallback" src="figures/history-liu-hui.svg" alt="内接正六、十二、二十四边形逐步扩大，圆内尚未覆盖的面积逐步缩小。">
+  <div class="circle-cutting-interactive" hidden>
+    <svg data-cut-plot viewBox="0 0 1200 420" role="img" aria-label="刘徽割圆动画：左侧为细分前，右侧为边数加倍的过程"></svg>
+    <div class="circle-cutting-controls" role="group" aria-label="刘徽割圆动画控制">
+      <output data-cut-status aria-live="polite" aria-atomic="true">6 边</output>
+      <span class="circle-cutting-sequence">6 → 12 → 24 → 48 → 96 → 192</span>
+      <div class="circle-cutting-buttons">
+        <button type="button" data-cut-play aria-pressed="false">播放</button>
+        <button type="button" data-cut-step>再割一次</button>
+        <button type="button" data-cut-reset>重置</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+::: {.key .fragment data-fragment-index="0"}
+**“割之弥细，所失弥少。”**
+
+边数越多，多边形与圆之间漏掉的面积越小。
+:::
+
+::: {.notes}
+教学补充，安排90秒。原文据[刘徽《九章算术》圆田术注](https://zh.wikisource.org/zh-hans/劉徽割圓術)；作注年代据[《九章算术后序》所记“魏之景元四年”](https://www.shidianguji.com/zh/book/SK1544/chapter/1m111acju69m6)，即公元263年。这里只摘引“割之弥细，所失弥少”，不把古人的几何论证表述为已经建立现代定积分理论。
+
+本页改用无配音的SVG割圆动画，由教师现场讲解。初始停在正六边形，点击“再割一次”逐次演示6→12→24→48→96→192边；“播放”连续演示，每次细分约1.8秒，完成后停留1.6秒。“暂停”可停在构造中间，“重置”回到六边形；离页、进入概览、黑屏或窗口失焦时自动暂停，返回后手动继续。按钮与键盘操作不触发翻页，原话与面积解释仍由幻灯片推进显示。
+
+左侧保留本次细分前的多边形，右侧先标出每段弧的中点，再由旧弦中点向弧中点展开新增三角形；固定圆的半径与初始顶点方向。绿色为已覆盖面积，金色为圆内余隙，虚线为旧边；过渡中的多边形表示构造过程，完成后才成为边数加倍的正多边形。动态图重述逼近思想，不复刻原文的全部数值算法。打印或脚本不可用时显示原6、12、24边形静态图。动画离线运行，不存储记录。
+
+刘徽原文从内接多边形及其余径、差幂讨论逼近与误差；下一页另以阿基米德的内外接图形作对照，不把外切正多边形算法归给刘徽。这里按主题从中国数学讲起，再回看更早的古希腊，不暗示两者的先后传承。
+:::
+
+## 内接与外切：把圆面积夹在中间 {#history-circle-bounds .history-page data-timing="90"}
+
+::: {.eyebrow}
+阿基米德 · 公元前3世纪 · 《圆的度量》
+:::
+
+**内接正多边形少算，外切正多边形多算。**
+
+```{=html}
+<div class="circle-cutting" data-circle-cutting="bounds">
+  <img class="circle-cutting-fallback" src="figures/history-circle-bounds.svg" alt="内接与外切正六、十二、二十四边形从两侧夹住同样大小的圆。">
+  <div class="circle-cutting-interactive" hidden>
+    <svg data-cut-plot viewBox="0 0 1200 420" role="img" aria-label="内外接多边形动画：内接面积增大，外切面积减小，逐步夹逼圆"></svg>
+    <div class="circle-cutting-controls" role="group" aria-label="内外接多边形动画控制">
+      <output data-cut-status aria-live="polite" aria-atomic="true">6 边</output>
+      <span class="circle-cutting-sequence">6 → 12 → 24 → 48 → 96</span>
+      <div class="circle-cutting-buttons">
+        <button type="button" data-cut-play aria-pressed="false">播放</button>
+        <button type="button" data-cut-step>再割一次</button>
+        <button type="button" data-cut-reset>重置</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+::: {.key .fragment data-fragment-index="0"}
+$$S_{\text{内接}}\le S_{\text{圆}}\le S_{\text{外切}}.$$
+
+边数沿 $6,12,24,\ldots$ 增加，两侧的面积差趋于 $0$。
+:::
+
+::: {.notes}
+教学补充，安排90秒。历史出处：[Heath《Archimedes》“Measurement of a Circle”部分](https://www.gutenberg.org/cache/epub/35550/pg35550-images.html)；原著命题1的英译与讨论见[哈佛大学整理的《圆的度量》材料](https://abel.math.harvard.edu/archive/archimedes09/pdf/Measurement.of.the.Circle.pdf)。阿基米德的圆面积论证使用穷竭法；估计圆周率时，从正六边形逐次加倍至正九十六边形，用内外多边形的周长夹住圆周长。本页用现代面积不等式重述其中的夹逼思想，动画逐次演示6、12、24、48、96边形，不把面积计算冒充原著命题3的数值步骤。
+
+动画无配音，教师使用“播放／暂停”“再割一次”“重置”控制节奏；初始停在六边形，连续播放到九十六边形后停止，不循环。左侧保留细分前的形状，右侧同时补入内接三角形、切去外切多边形的角。保留原切线，新增直线与目标切线平行，从旧顶点向圆移动，直到与圆相切，因此过渡期间外层始终包含圆，内层始终位于圆内。虚线显示旧边；正多边形的边数在每次构造完成后更新。离页、概览、黑屏及失焦自动暂停；打印或无脚本时显示原静态图。
+
+两个圆的半径相同。完成时内接多边形顶点距圆心为r；外切顶点距圆心为r/cos(π/n)，相对内接顶点转过π/n，所以每条外切边到圆心的距离恰为r。对n=6·2^k，两侧面积分别为nr²sin(2π/n)/2与nr²tan(π/n)，从两侧趋于πr²；讲课不要求学生计算这些式子。动画按钮不推进页面；另按翻页键显示面积夹逼与误差趋零，联系后面的矩形下和、上和。
+:::
+
+## 阿基米德：抛物线弓形的面积 {#history-parabola .history-page data-timing="120"}
+
+::: {.eyebrow}
+公元前3世纪 · 《抛物线求积》
+:::
+
+取切线平行于斜弦 $AB$ 的点 $C$，记内接三角形 $ABC$ 的面积为 $T$。
+
+![](figures/history-parabola.svg){.history-figure width="1200" height="410" fig-alt="抛物线与斜弦AB围成弓形，A、B不关于抛物线对称轴对称。第一幅区分抛物线顶点V与切线平行于AB的点C，绿色内接三角形ABC与弓形同底等高，面积为T；第二幅补入两个金色三角形，总面积T/4；第三幅再补入四个紫色三角形，总面积T/16。灰色为尚未覆盖的部分。"}
+
+::: {.key .fragment data-fragment-index="0"}
+每层新增的**总面积**是上一层的 $\dfrac14$：
+
+$$S=T+\dfrac T4+\dfrac T{16}+\cdots=\dfrac43T.$$
+:::
+
+::: {.prompt .fragment data-fragment-index="1"}
+从多边形、三角形到矩形：用简单图形的面积和逼近曲边面积。
+:::
+
+::: {.notes}
+教学补充，安排2分钟。结论直接见[阿基米德《抛物线求积》原序英译](https://mathshistory.st-andrews.ac.uk/Extras/Archimedes_parabola/)；逐层三角形的几何论证见[Heath《Archimedes》“Quadrature of the Parabola”部分](https://www.gutenberg.org/cache/epub/35550/pg35550-images.html)。这里的弓形由抛物线弧与弦围成；内接三角形须与弓形同底等高，其第三个顶点处的切线平行于弦，不能任取曲线上的点。阿基米德用有限几何关系及穷竭法证明面积为该三角形的4/3；屏幕上的无穷等比和是现代记号的重述。
+
+自绘图用y=1−x²，斜弦端点为A=(−3/2,−5/4)、B=(1/2,3/4)，弦方程为y=x+1/4；两端不关于对称轴x=0对称。抛物线顶点是V=(0,1)，内接三角形的第三点取C=(−1/2,3/4)，其切线y=x+5/4与AB平行；C不是抛物线顶点。图中第一幅标出V、C及切线，三幅均使用同一条斜弦。第一层三角形ABC的面积仍为T=1。对任一剩余弓形，以端点横坐标a、b的中点m=(a+b)/2作曲线上第三点；新三角形面积为(b−a)³/8。横向区间每次减半，每个子三角形面积为母三角形的1/8，同一层两倍数量的三角形总面积为上一层的1/4。因此第二层两个三角形的面积和为T/4，第三层四个之和为T/16。有限层仍有灰色余隙；各剩余弓形相对弦的最大高度随细分缩小，所有外包平行四边形面积之和趋零，故逐层面积和确实逼近整个弓形。图中抛物线用精确二次贝塞尔曲线绘制，没有用圆弧代替。
+
+首次完整显示三幅分层图，推进一次显示各层面积关系和4/3结论，再推进提出后续的矩形面积和方法。只解释历史思路，不展开抛物线的一般证明，也不提前使用牛顿—莱布尼兹公式。下一页保留原来的三角形与扇形回顾，再进入曲边梯形与矩形逼近。
+:::
+
+## 回顾：三角形与扇形 {#review-lec10-circle-area .circle-review data-timing="240"}
+
+单位圆中，取 $0<x<1$，$t=\angle QOP=\arcsin x$，角度以弧度计。
+
+::::: {.circle-review-layout}
+:::: {.circle-review-picture}
+![](figures/trig-area-decomposition.svg){width="680" height="600" fig-alt="复用第10讲第12页：单位圆中P=(x,根号下1减x平方)，H为P在横轴上的投影，Q=(0,1)。绿色三角形OHP与棕色扇形OQP无重叠地拼成横坐标0到x的圆下区域；角t从正纵轴OQ量到OP。"}
+::::
+
+:::: {.circle-review-pieces}
+::: {.circle-review-piece .fragment data-fragment-index="0"}
+**绿色三角形 $OHP$**
+
+$$S_{\triangle}=\dfrac x2\sqrt{1-x^2}.$$
+:::
+
+::: {.circle-review-piece .circle-review-sector .fragment data-fragment-index="1"}
+**棕色扇形 $OQP$**
+
+$$S_{\text{扇形}}=\dfrac t2=\dfrac12\arcsin x.$$
+:::
+::::
+:::::
+
+::: {.formula-box .circle-review-total .fragment data-fragment-index="2"}
+$$\displaystyle \int\sqrt{1-x^2}\,\mathrm dx
+=\underbrace{\dfrac x2\sqrt{1-x^2}}_{\text{三角形}}
++\underbrace{\dfrac12\arcsin x}_{\text{扇形}}+C.$$
+
+[不定积分的结果要加任意常数 $C$。]{.circle-review-note}
+:::
+
+::: {.notes}
+回顾来源：../lec-10/main.qmd第12页“三角代换：答案的几何意义”，页面ID trig-area-meaning，原图为../lec-10/figures/trig-area-decomposition.svg；本讲复制同一SVG到figures/，图像内容不作修改。安排4分钟，回顾而不增加例题或练习编号。第10讲用三角形面积和扇形面积对应不定积分结果的两项；本页先回顾初等几何面积，再回顾不定积分公式及任意常数C。定积分的定义与几何意义在后面正式讲解。此处x既是图中横坐标参数，也是不定积分的积分变量，t是几何角。
+
+首次完整显示单位圆、取值条件及原图；推进一次显示绿色三角形公式，第二次显示棕色扇形公式，第三次显示完整不定积分与两块面积的对应及加C的说明。角t从正纵轴OQ量起，故x=sin t而非cos t。两块区域只沿OP相接，没有重叠，合起来正好是0≤u≤x的圆下区域；扇形半径为1，面积t/2，角度须以弧度计。复用图中x=0.6、纵坐标0.8只是示意，公式适用于任意0<x<1。
+
+本页回顾第10讲已用三角代换求出的不定积分，几何图用于解释所得原函数的两项，不把面积分解本身当作原函数公式的证明。不提前使用牛顿—莱布尼兹公式，也不讲积分上限函数求导。第13讲正式讲公式时可回扣：G(u)=u√(1−u²)/2+arcsin(u)/2是√(1−u²)的一个原函数，G(0)=0，所以该面积等于G(x)−G(0)。不定积分写G(x)+C，与确定的几何面积相区分。
+:::
+
+## 曲边梯形的面积 {#section-area .cover .section-cover background-color="#123c3a" footer=false data-timing="30"}
+
+::: {.eyebrow}
+第一小节
+:::
+
+::: {.section-symbol}
+$$A=\lim\limits_{\lambda\to0}\sum_{i=1}^{n}f(\xi_i)\Delta x_i.$$
+:::
+
+::: {.cover-route}
+分割 → 近似代替 → 求和 → 取极限
+:::
+
+::: {.notes}
+第一小节封面，安排30秒。接续开场的初等几何面积回顾，提出曲边梯形的面积问题。封面预告面积和式，函数条件及符号在后面的正文中说明；本节依次安排曲边梯形、奶龙铺瓷砖视频、矩形逼近演示、上下和取极限求面积、四步求面积、面积计算例题和从和式识别曲线与区间的练习。第一小节只讨论几何面积，不使用定积分记号或可积性结论。
+:::
+
+## 曲边梯形的面积 {#curved-trapezoid .figure-page data-timing="120"}
+
+设 $f(x)$ 在 $[a,b]$ 上连续，且 $f(x)\ge0$，其中 $a<b$。
+
+由曲线 $y=f(x)$、直线 $x=a$、$x=b$ 和 $x$ 轴围成的图形，称为**曲边梯形**。
+
+::::: {.r-stack .curved-trapezoid-gallery}
+:::: {.fragment .fade-out data-fragment-index="0"}
+![](figures/curved-trapezoid.svg){.wide-figure width="960" fig-alt="非负连续曲线与横轴及两条竖直边界围成曲边梯形，边界分别标为a与b。"}
+::::
+
+:::: {.fragment .current-visible data-fragment-index="0"}
+::: {.curved-example-heading}
+**抛物线：** $y=x^2+1,\qquad a=-1,\quad b=1$。
+:::
+
+![](figures/curved-trapezoid-parabola.svg){.wide-figure width="960" fig-alt="抛物线y=x平方加1在负一到一之间的曲边梯形。绿色阴影从横轴延伸到曲线，左右边界标为a=-1和b=1；曲线最低点为(0,1)，两端高度均为2。"}
+::::
+
+:::: {.fragment data-fragment-index="1"}
+::: {.curved-example-heading}
+**正态曲线（均值为 $0$）：** $y=\dfrac{1}{\sigma\sqrt{2\pi}}e^{-\frac{x^2}{2\sigma^2}},\quad\sigma>0$。
+:::
+
+![](figures/curved-trapezoid-normal.svg){.wide-figure width="960" fig-alt="均值为0、标准差为sigma的正态曲线。绿色阴影是曲线、横轴与x=-sigma和x=sigma两条竖直边界围成的曲边梯形，左右边界分别标为a=-sigma和b=sigma。"}
+::::
+:::::
+
+::: {.prompt .fragment data-fragment-index="2"}
+曲边的“高”随 $x$ 改变，能否把它分成许多近似的矩形？
+:::
+
+::: {.notes}
+教材明确给出：医用第118—119页4.1.1“曲边梯形的面积”，图4-1、4-3；文科第38—39页§1.6一，图1.14—1.15。首次展示沿用原曲线示意图及定义，原图片文件保持不变；图中的一般曲线不对应题目数据。安排2分钟。a、b为底边端点；这里非负性保证所讨论的是通常的几何面积。
+
+随后在同一位置逐次展示两幅教学补充图，不增加例题编号：推进一次显示y=x²+1、a=−1、b=1，阴影位于横轴与抛物线之间；再推进一次显示均值0、标准差σ>0的正态密度y=exp(−x²/(2σ²))/(σ√(2π))、a=−σ、b=σ，阴影限于两条竖直边界之间。正态图以t=x/σ和σy作绘图坐标，横轴刻度对应x=±σ，纵轴不标具体数值；并未把σ固定为1。两图均连续且非负，示例说明曲边梯形不要求曲线单调。本页只识别图形与边界，不计算面积，也不引入概率结论。
+
+第三次推进显示矩形分割问题。向后退一步恢复上一幅图；打印时原图在上，新增两图在下方并排，完整保留定义、边界及问题。
+:::
+
+## 奶龙铺瓷砖：怎样算面积？ {#nailong-tiling .nailong-video-slide data-timing="90"}
+
+```{=html}
+<div class="nailong-video-frame">
+  <video id="nailong-tiling-video" controls playsinline preload="metadata" data-ignore
+    aria-label="大小奶龙用两种矩形铺法估计曲线y等于x平方在零到一区间下方的面积"
+    poster="media/nailong-tiling-poster.jpg" src="media/nailong-tiling.mp4">
+    当前浏览器无法播放视频，可<a href="media/nailong-tiling.mp4">打开独立视频</a>。
+  </video>
+  <img class="nailong-tiling-print" src="media/nailong-tiling-poster.jpg"
+    alt="大奶龙的矩形多铺，小奶龙的矩形少铺；两种方案从四等分细化为八等分。继续细分，能得到准确面积吗？">
+</div>
+```
+
+::: {.notes}
+三幕Manim视频，安排90秒，含约57秒播放与结尾提问。第一幕提出y=x²在[0,1]上的曲边地板面积问题；第二幕大奶龙用右端点高度的四个矩形覆盖区域、小奶龙用左端点高度的矩形在曲线下方铺设，分别显示多铺与少铺部分；第一段左端点高度为0，如实画为横轴上的线段。第三幕并排将两种方案从4等分细化为8等分，最后停在“继续细分，能得到准确面积吗？”，不公布面积值，不讲定积分或极限公式。使用普通话角色对白与同步字幕，两段铺法介绍后的长停顿减半，配音和铺砖动画保持原速。结尾问题完整显示至少8秒。手动点击有声播放，保留控制栏，不循环；离页、切换到概览或窗口失焦时暂停。打印显示海报。动画工程位于animations/nailong-tiling/；独立重建视频不运行Quarto，不影响当前课件预览。下一页保留原有交互矩形演示，供学生继续验证。
+:::
+
+## 让矩形越来越细 {#riemann-experiment .demo-page data-timing="180"}
+
+将 $[0,1]$ 等分，用矩形逼近 $y=x^2$ 下方的面积。
+
+{{< include integral-demo.qmd >}}
+
+::: {.prompt}
+先比较左端点与右端点取点的差异，再把 $n$ 从 $4$ 增加到 $64$。
+:::
+
+
+::: {.notes}
+教学演示：改编自医用第121—122页例4.1及文科第39—40页例1，未改变函数及区间。安排3分钟。先固定n=4，比较左端点与右端点；再增大n，观察左、右面积和的差缩小。所有图形、样点和表格都从同一函数f(x)=x²、区间[0,1]与同一个n计算。演示只形成直观，不把有限次观察当作面积精确值的证明。此页不提前显示精确值，下一页用上下和取极限求得1/3。
+
+交互离线运行，只有本页使用。横纵坐标无量纲，显示范围、等分数、当前取点方式及Δx；选项可用键盘操作，控制事件不交给Reveal翻页。改变参数只更新当前图和表，不写浏览器存储。翻页返回保留当前选择；刷新恢复默认n=4、右端点。打印使用右端点四矩形的静态SVG和左、右端点两种面积和，禁用脚本时也有静态后备图。
+:::
+
+## 用下和与上和求面积 {#lower-upper-area data-timing="180"}
+
+设 $A$ 为 $y=x^2$ 在 $[0,1]$ 上的曲边梯形面积。将区间等分为 $n$ 段，每段宽 $\dfrac1n$。
+
+::::: {.pair-grid .area-sum-grid}
+:::: {.concept-card .lower-sum}
+**下和** [取左端点]{.area-endpoint}
+
+$$\begin{aligned}
+L_n&=\sum_{i=1}^{n}\left(\dfrac{i-1}{n}\right)^2\dfrac1n\\
+&=\dfrac{(n-1)(2n-1)}{6n^2}.
+\end{aligned}$$
+
+::: {.area-limit .fragment data-fragment-index="0"}
+$$\lim\limits_{n\to\infty}L_n=\dfrac16\cdot1\cdot2=\dfrac13.$$
+:::
+::::
+:::: {.concept-card .upper-sum}
+**上和** [取右端点]{.area-endpoint}
+
+$$\begin{aligned}
+U_n&=\sum_{i=1}^{n}\left(\dfrac in\right)^2\dfrac1n\\
+&=\dfrac{(n+1)(2n+1)}{6n^2}.
+\end{aligned}$$
+
+::: {.area-limit .fragment data-fragment-index="0"}
+$$\lim\limits_{n\to\infty}U_n=\dfrac16\cdot1\cdot2=\dfrac13.$$
+:::
+::::
+:::::
+
+:::: {.area-conclusion .fragment data-fragment-index="1"}
+::: {.area-reason}
+$x^2$ 在 $[0,1]$ 上递增，下和不超过面积，上和不小于面积：
+:::
+
+::: {.area-bound}
+$$L_n\le A\le U_n.$$
+:::
+
+::: {.area-result}
+由**夹逼定理**，得 $\boxed{A=\dfrac13}$。
+:::
+::::
+
+::: {.notes}
+承接上一页同一模型的矩形演示，安排3分钟，不增加例题或练习编号。首次显示区间、等分宽度、上下和的取点方式与有限和计算；推进一次同时显示两个极限，再推进一次用几何夹逼得到面积。下和中平方项为0²至(n−1)²，上和中为1²至n²；用平方和公式Σ_{i=1}^m i²=m(m+1)(2m+1)/6分别取m=n−1和m=n，得到两闭式。n=4时下和7/32=0.21875、上和15/32=0.46875，与演示一致；一般有U_n−L_n=1/n。由于x²递增，每个小区间上左端点给出最小高度、右端点给出最大高度，因此L_n≤A≤U_n，且两端均趋于1/3。左右端点分别对应下和与上和的结论依赖本例的递增性，不推广为任意函数的通则。本页只用面积、有限和及极限，不使用定积分记号或可积性结论；后面的四步页归纳一般方法，计算例题再用y=x³的面积问题练习这些步骤。
+:::
+
+## 从面积到和式的四步 {#four-steps .nailong-video-slide data-timing="180"}
+
+```{=html}
+<div class="nailong-video-frame">
+  <div class="four-steps-controls" hidden>
+    <button type="button" data-four-play aria-controls="nailong-four-steps-video">播放</button>
+    <button type="button" data-four-replay aria-controls="nailong-four-steps-video">重播</button>
+    <button type="button" data-four-mute aria-controls="nailong-four-steps-video" aria-pressed="false">静音</button>
+    <input type="range" data-four-seek min="0" max="64" step="0.01" value="0"
+      aria-label="四步动画播放进度" aria-controls="nailong-four-steps-video">
+    <output data-four-time>0:00 / 1:04</output>
+  </div>
+  <video id="nailong-four-steps-video" controls playsinline preload="metadata" data-ignore
+    aria-label="大小奶龙轮流配音并演示铺瓷砖：大奶龙讲分割与求和，小奶龙讲近似与取极限，底部流程同步高亮当前步骤"
+    poster="media/nailong-four-steps-poster.jpg" src="media/nailong-four-steps.mp4">
+    当前浏览器无法播放视频，可<a href="media/nailong-four-steps.mp4">打开四步动画</a>。
+  </video>
+</div>
+```
+
+::::: {.four-steps-print}
+:::: {.step-grid}
+::: {.concept-card}
+**① 分割**
+
+$$a=x_0<x_1<\cdots<x_n=b,$$
+
+$$\Delta x_i=x_i-x_{i-1}.$$
+:::
+::: {.concept-card}
+**② 近似**
+
+任取 $\xi_i\in[x_{i-1},x_i]$，
+
+$$\Delta A_i\approx f(\xi_i)\Delta x_i.$$
+:::
+::: {.concept-card}
+**③ 求和**
+
+$$A\approx S_n=\sum_{i=1}^{n}f(\xi_i)\Delta x_i.$$
+:::
+::: {.concept-card}
+**④ 取极限**
+
+记 $\lambda=\max_i\Delta x_i$，则
+
+$$A=\lim\limits_{\lambda\to0}S_n.$$
+:::
+::::
+
+::: {.key}
+$\lambda\to0$ 要求**每个**小区间的长度都趋于零。
+:::
+:::::
+
+::: {.notes}
+教材明确给出：医用第119页四步骤；文科第38—39页的面积讨论。安排3分钟，包含约64秒双角色配音Manim动画与教师讲解。沿用第8页大小奶龙的透明素材与配音设置：第1、3步为大奶龙，第2、4步为小奶龙；切换步骤时同步替换角色，两者站在同一位置、脚底对齐。保持y=x²在[0,1]上的面积模型，一次只展示当前步骤，最下一行始终显示“分割→近似→求和→取极限”，仅高亮当前步骤。角色、配音、流程提示与分镜共用时间轴，暂停或拖动进度也保持同步。
+
+0—12秒“分割”：大奶龙讲解四等分区间，画出曲边窄带，标记Δx_i。12—28秒“近似”：换成小奶龙讲解，把矩形瓷砖放到第三条窄带，标记宽Δx_i、高f(ξ_i)，显示ΔA_i≈f(ξ_i)Δx_i；本例取右端点。28—42秒“求和”：换回大奶龙讲解并铺齐其余瓷砖，逐块显示1/64、4/64、9/64、16/64，给出面积和S_n及S_4=0.468750。42—64秒“取极限”：由小奶龙讲解，按4→8→16→32→64等分，每块先切成两个同高矩形，再调整子矩形高度；多铺部分逐渐缩小，显示λ=max Δx_i=1/n→0与A=lim S_n=1/3。配音强调六十四块仍只是近似；保留有限矩形和近似数值，不把有限次细分画成精确面积。以上边界取整到秒，逐帧时刻见配套时间轴。
+
+原一般方法四张卡片保留为打印正文；放映时使用动画。一般可任取ξ_i∈[x_{i−1},x_i]，右端点只是本例的选择。只增加分点个数不能保证最大段长趋零：例如始终保留[0,1/2]不动，只把[1/2,1]越分越细，n可趋于∞而λ始终为1/2。此反例为教学补充，口头使用即可。存在性与取点无关的要求在第二小节的定义页正式补齐，本页仍是连续非负函数的面积情境。
+
+手动有声播放、不循环，结束保留末帧；播放、重播、静音与进度控件放在视频上方，避免遮住底部流程，无脚本时回退到原生控制栏。离页、进入概览或黑屏、切换窗口或标签时暂停，返回后保留原位置。工程位于animations/nailong-four-steps/，render.sh只重建独立视频、音轨、海报与字幕，不运行Quarto，不影响当前课件预览。
+:::
+
+## 用面积和式求面积 {#example-definition data-timing="300"}
+
+::::: {#exm-definition .lecture-env}
+:::: {.columns}
+::: {.column width="54%"}
+用“分割、近似、求和、取极限”的方法，求曲线 $y=x^3$、直线 $x=0$、$x=1$ 与 $x$ 轴围成的图形的面积 $A$。
+
+[**Hint:** $\displaystyle\sum_{i=1}^{n}i^3=\left[\dfrac{n(n+1)}2\right]^2$。]{.hint}
+:::
+::: {.column width="46%"}
+![](figures/cubic-area.svg){.cubic-area-figure width="640" fig-alt="曲线y等于x的三次方在零到一区间上递增，曲线、x轴与直线x等于一围成的区域以青绿色阴影表示，标记面积A，曲线经过点(1,1)。"}
+:::
+::::
+:::::
+
+:::: {.lecture-env .solution-block .compact-solution .fragment data-fragment-index="0"}
+[解]{.solution-title}
+
+将 $[0,1]$ 等分成 $n$ 段，取右端点的函数值作矩形的高：
+
+$$\Delta x_i=\frac1n,\qquad\xi_i=\frac in.$$
+
+::: {.fragment data-fragment-index="1"}
+$$S_n=\sum_{i=1}^{n}\left(\dfrac in\right)^3\dfrac1n
+=\dfrac1{n^4}\sum_{i=1}^{n}i^3
+=\dfrac{(n+1)^2}{4n^2}.$$
+:::
+
+::: {.fragment data-fragment-index="2"}
+$$A=\lim\limits_{n\to\infty}S_n
+=\lim\limits_{n\to\infty}\dfrac14\left(1+\dfrac1n\right)^2
+=\boxed{\dfrac14}.$$
+:::
+::::
+
+::: {.notes}
+教学补充：沿用教材“分割、近似、求和、取极限”的面积方法，函数取y=x³、区间取[0,1]。安排5分钟。首次同时显示面积题、配图及立方和公式；第一次推进给出等分和右端点，第二次给出矩形面积和，第三次取极限。等分时λ=1/n，故n→∞与λ→0等价。函数在[0,1]上递增，右端点面积和为(n+1)²/(4n²)，左端点面积和为(n−1)²/(4n²)，二者夹住真实面积，且均趋于1/4，因此由夹逼定理得到面积1/4。此处只用几何面积与极限，不引用定积分记号、可积性或牛顿—莱布尼兹公式。
+:::
+
+## 从和式识别曲边梯形 {#practice-riemann .student-picker-slide data-timing="240"}
+
+{{< include student-picker-controls.qmd >}}
+
+::: {.practice-time}
+独立作答 · 3 分钟
+:::
+
+::: {#exr-riemann .lecture-env}
+下列和式极限分别表示哪个曲边梯形的面积？无需求值。
+
+(1) $\displaystyle\lim\limits_{n\to\infty}\sum_{i=1}^{n}\left(1+\frac in\right)^2\frac1n$；
+
+(2) $\displaystyle\lim\limits_{n\to\infty}\sum_{i=1}^{n}\sqrt{1+\left(\frac{2i}{n}\right)^2}\,\frac2n$。
+:::
+
+::::: {.lecture-env .solution-block .riemann-picture-solution .fragment data-fragment-index="0"}
+[解]{.solution-title}
+
+:::: {.riemann-answer-grid}
+::: {.riemann-answer}
+[(1)]{.riemann-answer-label}
+
+![](figures/riemann-area-square.svg){.riemann-answer-figure fig-alt="第(1)题：曲线y等于x平方、直线x等于1和x等于2以及x轴围成的曲边梯形；该区域以绿色阴影标出，面积记为A。"}
+:::
+::: {.riemann-answer .fragment data-fragment-index="1"}
+[(2)]{.riemann-answer-label}
+
+![](figures/riemann-area-root.svg){.riemann-answer-figure fig-alt="第(2)题：曲线y等于根号下1加x平方、直线x等于0和x等于2以及x轴围成的曲边梯形；该区域以绿色阴影标出，面积记为A。"}
+:::
+::::
+:::::
+
+::: {.notes}
+解答以两幅并排的曲边梯形图表示，图中标明曲线、端点与阴影面积A，不计算面积值。第一次推进显示第(1)题图，第二次推进显示第(2)题图；题干首次完整展示。
+
+教学补充：按两书的面积和式改编，训练识别“矩形的高×宽”，不是教材现成题号。安排独立作答3分钟、反馈1分钟。题中面积均指相应曲线、x轴与区间两端的竖直边界围成的几何面积。第一题按宽1/n、右端点1+i/n识别为曲线y=x²在[1,2]上的面积；第二题按宽2/n、右端点2i/n识别为曲线y=√(1+x²)在[0,2]上的面积。两函数均连续且非负。也接受第一题识别为y=(1+x)²在[0,1]上的面积，第二题识别为y=2√(1+4x²)在[0,1]上的面积，按所选宽度和样点核对，不要求证明不同表述之间的等价关系。此页不出现定积分记号或被积函数、积分区间等术语，第二小节正式定义后再联系这些和式。
+:::
+
+## 定积分的定义 {#section-definition .cover .section-cover background-color="#123c3a" footer=false data-timing="30"}
+
+::: {.eyebrow}
+第二小节
+:::
+
+::: {.section-symbol}
+$$\displaystyle \int_a^b f(x)\,\mathrm dx$$
+:::
+
+::: {.cover-route}
+定义与可积性 · 几何意义 · 基本性质
+:::
+
+::: {.notes}
+第二小节封面，安排30秒。从面积和式推广到一般有界函数的定积分定义，随后讨论可积充分条件、几何意义及线性、换限与区间可加性，并回扣第一小节的计算例题与和式识别练习。本节以拆分区间练习结束。
+:::
+
+## 定积分的定义 {#integral-definition data-timing="240"}
+
+设 $a<b$，函数 $f(x)$ 在 $[a,b]$ 上有界。
+
+::::: {#def-riemann .lecture-env}
+:::: {.definition-partition-grid}
+::: {.definition-partition-text}
+任意分割 $a=x_0<\cdots<x_n=b$，在每段中任取 $\xi_i\in[x_{i-1},x_i]$。记
+
+$$\begin{aligned}
+\Delta x_i&=x_i-x_{i-1},\\
+\lambda&=\max_i\Delta x_i.
+\end{aligned}$$
+:::
+::: {.definition-partition-picture}
+![](figures/riemann-definition.svg){.definition-partition-figure width="680" fig-alt="黎曼和示意图：区间从a到b作不等距分割，每段任取一个样点，以该点的函数值为矩形高度。橙色矩形突出第i段，标出端点x下标i减1与x下标i、样点ξ下标i、宽度Δx下标i及高度f(ξ下标i)。"}
+:::
+::::
+
+若当 $\lambda\to0$ 时，无论怎样分割和取点，黎曼和 $\displaystyle\sum_{i=1}^{n}f(\xi_i)\Delta x_i$ 都趋于**同一个有限极限** $I$，则称 $f$ 在 $[a,b]$ 上可积，并定义
+
+$$\displaystyle \boxed{\displaystyle \int_a^b f(x)\,\mathrm dx
+=\lim\limits_{\lambda\to0}\sum_{i=1}^{n}f(\xi_i)\Delta x_i=I}.$$
+:::::
+
+::: {.hint}
+$f(x)$：被积函数；$x$：积分变量；$a$：下限；$b$：上限。
+:::
+
+::: {.notes}
+配图与分割记号并排，首次进入本页即显示。
+
+教材明确给出：医用第120—121页定义4.1；文科第40—41页定义1.6.1。采用文科书明确写出的“有界函数”前提，并明确同一个有限极限，避免把“每种取法都有某个极限”误当作定义。安排4分钟，强调任意分法、任意取点、λ→0三个量词。配图使用一组不等距分割，各矩形高度由本段样点的函数值决定；橙色矩形对应第i段，宽为Δx_i、高为f(ξ_i)，其余矩形按同样方式组成黎曼和。图中的连续正函数仅供直观说明，不给定义增加连续或非负的前提。f为被积函数，x为积分变量，f(x)dx为被积表达式。标准黎曼定义先以a<b建立，等限与反向积分稍后按教材约定引入。
+:::
+
+## 再看铺瓷砖：不均匀分割 {#riemann-revisit .nailong-video-slide data-timing="180"}
+
+```{=html}
+<div class="nailong-video-frame">
+  <div class="four-steps-controls" hidden>
+    <button type="button" data-four-play aria-controls="nailong-riemann-video">播放</button>
+    <button type="button" data-four-replay aria-controls="nailong-riemann-video">重播</button>
+    <button type="button" data-four-mute aria-controls="nailong-riemann-video" aria-pressed="false">静音</button>
+    <input type="range" data-four-seek min="0" max="101" step="0.01" value="0"
+      aria-label="任意取点四步动画播放进度" aria-controls="nailong-riemann-video">
+    <output data-four-time>0:00 / 1:41</output>
+  </div>
+  <video id="nailong-riemann-video" controls playsinline preload="metadata" data-ignore
+    aria-label="大小奶龙重访铺瓷砖：不均匀分割，四段宽为0.12、0.22、0.48、0.18；小区间内任取 ξ_i，矩形高度为 f(ξ_i)；细分仍保持宽窄不同，强调最大宽度趋于零；角色随对白切换，底部四步同步高亮"
+    poster="media/nailong-riemann-poster.jpg?v=narration-3" src="media/nailong-riemann.mp4?v=narration-3">
+    当前浏览器无法播放视频，可<a href="media/nailong-riemann.mp4?v=narration-3">打开任意取点动画</a>。
+  </video>
+</div>
+```
+
+::::: {.four-steps-print}
+:::: {.step-grid}
+::: {.concept-card}
+**① 分割**
+
+**不均匀分割**，四段宽分别为：
+
+$$0.12,\quad0.22,\quad0.48,\quad0.18.$$
+
+$$\Delta x_i=x_i-x_{i-1}.$$
+:::
+::: {.concept-card}
+**② 近似**
+
+每段任取 $\xi_i\in[x_{i-1},x_i]$，
+
+$$\text{矩形高度}=f(\xi_i).$$
+
+矩形上边在本小区间内与曲线相交。
+:::
+::: {.concept-card}
+**③ 求和**
+
+每块瓷砖的高乘自己的宽：
+
+$$S_n=\sum_{i=1}^{n}f(\xi_i)\Delta x_i.$$
+:::
+::: {.concept-card}
+**④ 取极限**
+
+瓷砖的**最大宽度**趋于零：
+
+$$\lambda=\max_i\Delta x_i\to0.$$
+
+$$\lim\limits_{\lambda\to0}S_n=\displaystyle\int_0^1x^2\,dx=\dfrac13.$$
+:::
+::::
+:::::
+
+::: {.notes}
+教学补充：紧接第15页的正式定义，重访第11页同一个y=x²、[0,1]面积模型。安排3分钟，包含约101秒Manim动画与讲解。第11页保留原有右端点示范，本页把取点推广到每个小区间内任意ξ_i∈[x_{i−1},x_i]；初始分割为0、0.12、0.34、0.82、1，四段宽为0.12、0.22、0.48、0.18，最宽是最窄的4倍。第一步用不同颜色的窄带和四个宽度标尺同时显示差异，标题与配音明确强调不均匀分割。取点在所选小区间内移动，包括两端点，矩形的上边、交点、竖直投影和高度标记同步变化，高度始终等于f(ξ_i)。求和时再次显示四段各自的宽，配音说明每块瓷砖的面积由它自己的高和宽决定。
+
+第二步先由小奶龙说明任意取点，再换大奶龙问“瓷砖到底多高？”，小奶龙答“只要与曲线相交即可”，紧接着明确指矩形上边在本小区间内与曲线相交。交点横坐标为ξ_i，高度为f(ξ_i)。用高亮上边和橙色交点避免把任意边碰到曲线误当成条件。
+
+第四步由小奶龙说明继续不均匀细分，再问“谁趋于零？”，大奶龙答“瓷砖的最大宽度趋于零”。标出最长小区间，显示λ=max Δx_i；每段按2∶3或3∶2分成一长一短两段，依次变为4、8、16、32、64块，各次重新选取段内样点。整个过程保持宽窄不同，最大宽度依次为0.48、0.288、0.1728、0.10368、0.062208。对于本例的连续函数，无论分割与取点怎样选，只要λ→0，和式都趋于1/3；动画只作直观说明，不以有限次演示代替定义中的全称要求。画面末尾保留有限瓷砖，注明64块仍是近似值。
+
+每句对白独立计时，大小奶龙在同一位置随说话者切换，角色下方不加名称标签。一次显示一个步骤，最下一行“分割→近似→求和→取极限”同步高亮。手动有声播放，不循环，离页、概览、黑屏及失焦时暂停，返回保留进度。工程animations/nailong-riemann/独立生成视频、配音、字幕与时间轴，复用第8页声音和第11页绘图样式；不构建课件。
+:::
+
+## 非等分时怎样求和 {#practice-unequal-sum .student-picker-slide .added-practice data-timing="240"}
+
+{{< include student-picker-controls.qmd >}}
+
+::: {.practice-time}
+独立作答 · 3 分钟
+:::
+
+::: {#exr-unequal-sum .lecture-env}
+设 $f(x)=x^2$，在 $[0,2]$ 上取分点及样点：
+
+$$x_0=0,\quad x_1=\dfrac14,\quad x_2=1,\quad x_3=2;$$
+
+$$\xi_1=\dfrac18,\quad \xi_2=\dfrac12,\quad \xi_3=\dfrac32.$$
+
+(1) 求 $\Delta x_1,\Delta x_2,\Delta x_3$ 与 $\lambda$。
+
+(2) 求此次分割的黎曼和 $\displaystyle\sum_{i=1}^3 f(\xi_i)\Delta x_i$。
+:::
+
+:::: {.lecture-env .solution-block .compact-solution .fragment data-fragment-index="0"}
+[解]{.solution-title}
+
+(1) $\displaystyle(\Delta x_1,\Delta x_2,\Delta x_3)=\left(\dfrac14,\dfrac34,1\right)$，$\lambda=1$。
+
+::: {.fragment data-fragment-index="1"}
+(2) $\displaystyle\left(\dfrac18\right)^2\dfrac14+\left(\dfrac12\right)^2\dfrac34+\left(\dfrac32\right)^2\cdot1=\dfrac{625}{256}$。
+:::
+::::
+
+::: {.notes}
+教学补充：按医用第120—121页定义4.1及本讲定义配图设计。安排独立作答3分钟、反馈1分钟。三个样点均严格位于对应小区间内；宽度之和为2，最大宽为1。黎曼和为1/256+3/16+9/4=625/256。每段高度必须乘各自的宽，不能统一乘2/3。单次有限和只是近似，定义还要求最大宽度趋于零时，不论分法与取点都趋向同一个数。
+:::
+
+## 定积分得到什么？ {#definite-versus-indefinite .method-table data-timing="120"}
+
+| 比较 | 不定积分 | 定积分 |
+|:---|:---|:---|
+| 记号 | $\displaystyle\int f(x)\,\mathrm dx$ | $\displaystyle\int_a^b f(x)\,\mathrm dx$ |
+| 结果 | **一族原函数** $F(x)+C$ | 固定区间上的**一个数** |
+| 例子 | $\displaystyle\int x^2\,\mathrm dx=\dfrac{x^3}{3}+C$ | $\displaystyle\int_0^1 x^2\,\mathrm dx=\dfrac13$ |
+
+::: {.formula-box .fragment data-fragment-index="0"}
+积分变量的字母可以改变：
+
+```{=html}
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" displaystyle="true"
+  aria-label="从a到b的f(x)dx定积分，等于f(t)dt定积分，等于f(u)du定积分">
+  <mrow>
+    <msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup>
+    <mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo>
+    <mspace width="0.167em"></mspace><mi mathvariant="normal">d</mi><mi>x</mi>
+    <mo>=</mo>
+    <msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup>
+    <mi>f</mi><mo stretchy="false">(</mo><mi style="color: #70509a">t</mi><mo stretchy="false">)</mo>
+    <mspace width="0.167em"></mspace><mi mathvariant="normal">d</mi><mi style="color: #70509a">t</mi>
+    <mo>=</mo>
+    <msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup>
+    <mi>f</mi><mo stretchy="false">(</mo><mi style="color: #087568">u</mi><mo stretchy="false">)</mo>
+    <mspace width="0.167em"></mspace><mi mathvariant="normal">d</mi><mi style="color: #087568">u</mi><mo>.</mo>
+  </mrow>
+</math>
+```
+:::
+
+::: {.notes}
+医用第121页说明(1)，并与前3讲已经掌握的不定积分比较。对照表为教学整理。安排2分钟。右栏的1/3已在第一小节用面积和式取极限算出，此处联系正式定义回顾该结果，不在这里使用原函数代端点。固定被积函数与积分上下限时，积分结果不含积分变量，也不加任意常数C；若函数含其他参数，积分值仍可能依赖那些参数，本页不作“永远不含字母”的断言。换积分变量时被积函数中的字母与微分必须同步更换。
+:::
+
+## 哪些函数一定可积？ {#integrability data-timing="120"}
+
+::: {#thm-integrability .lecture-env name="可积的充分条件"}
+1. 若 $f(x)$ 在闭区间 $[a,b]$ 上**连续**，则 $f$ 在该区间上可积。
+
+2. 若 $f(x)$ 在 $[a,b]$ 上**有界**，且只有**有限个间断点**，则 $f$ 在该区间上可积。
+:::
+
+::::: {.pair-grid .integrability-examples}
+:::: {.concept-card}
+**连续的例子**
+
+$f(x)=x^2$，$x\in[0,1]$。
+
+::: {.integrability-example-picture}
+![](figures/integrability-continuous.svg){.integrability-example-figure width="560" fig-alt="连续函数f(x)=x平方在闭区间[0,1]上的图像，曲线从实心点(0,0)连续上升至实心点(1,1)。"}
+:::
+::::
+:::: {.concept-card}
+**有跳跃的例子**
+
+$$f(x)=\begin{cases}1,&0\le x<1,\\3,&1\le x\le2.\end{cases}$$
+
+::: {.integrability-example-picture}
+![](figures/integrability-jump.svg){.integrability-example-figure width="560" fig-alt="有界分段常函数的图像：从x=0到x小于1时y=1，在(0,1)处为实心点、(1,1)处为空心点；从x=1到2时y=3，在(1,3)与(2,3)处均为实心点，x=1处有跳跃。"}
+:::
+::::
+:::::
+
+::: {.notes}
+两张配图首次同时显示，左图连续，右图在x=1处跳跃；空心点(1,1)不取，实心点(1,3)给出f(1)=3。
+
+教材明确给出：医用第121页可积条件；文科第41页定理1.6.1—1.6.2。两个说明函数为教学补充，第二个仅在x=1有跳跃，且1≤f≤3。安排2分钟，不证明充分条件，也不把连续性说成必要条件。此时可回扣第一小节：x²的连续性保证其在[0,1]上可积，右端点面积和的极限1/3就是其定积分值。以后按定义计算时，先确认可积，再选择方便的等分及右端点；只算出一种取法的极限通常不足以单独证明任意有界函数可积。
+:::
+
+## 不可积的两个例子 {#nonintegrability data-timing="240"}
+
+在 $[0,1]$ 上讨论黎曼积分。
+
+:::::: {.pair-grid .nonintegrability-grid}
+::::: {.concept-card}
+**① 无界函数**
+
+$$f(x)=\begin{cases}
+\dfrac1x,&0<x\le1,\\
+0,&x=0.
+\end{cases}$$
+
+![](figures/nonintegrability-unbounded.svg){.nonintegrability-figure fig-alt="函数在x大于0时为1/x，曲线在靠近0时向上无界延伸，箭头标示正无穷；原点的实心点表示f(0)=0。"}
+
+:::: {.nonintegrability-caption .fragment data-fragment-index="0"}
+**无界 → 不可积**
+::::
+:::::
+::::: {.concept-card}
+**② 狄利克雷函数**
+
+$$D(x)=\begin{cases}
+1,&x\text{ 为有理数},\\
+0,&x\text{ 为无理数}.
+\end{cases}$$
+
+![](figures/nonintegrability-dirichlet.svg){.nonintegrability-figure fig-alt="同一分割的两种取点示意，而非狄利克雷函数的完整图像：上图各段取有理点，矩形高为1，和式为1；下图各段取无理点，高为0，和式为0。"}
+
+:::: {.nonintegrability-caption .fragment data-fragment-index="1"}
+**极限不唯一 → 不可积**
+::::
+:::::
+::::::
+
+::: {.notes}
+教学补充：根据医用第120—121页定义4.1及可积条件、文科第40—41页定义1.6.1与定理1.6.1—1.6.2设计，非教材原例。安排4分钟，紧接第19页的可积充分条件。首次同时给出两个完整函数及配图，正文只保留简短结论；第一次推进显示“无界→不可积”，第二次推进显示“极限不唯一→不可积”。左图画1/x在零附近向上无界延伸，并用原点实心点表示f(0)=0；右图比较同一分割的两种取点和矩形高度，不把两排点或矩形上边误画成狄利克雷函数的完整图像。不使用原函数、牛顿—莱布尼兹公式或反常积分计算，以下论证供教师备查。
+
+左例在0处赋值为0，使其在整个[0,1]上有定义；在(0,1]连续，只有0处不连续。f(1/n)=n说明无界，因而不满足本讲黎曼定义要求的有界性。也可直接由和式核对：把[0,1]分成n等份，第一段选ξ_1=1/n²，其余段任取样点，第一项为f(ξ_1)/n=n，其他项非负，所以S_n≥n→+∞；同时λ=1/n→0，故不存在定义所需的有限极限。不能仅凭“不是连续函数”或“不满足某个充分条件”作不可积结论。
+
+右例为狄利克雷函数，0≤D≤1，故有界。任意非退化小区间内都有有理数与无理数，所以对同一分割，全选有理样点时和式恒为ΣΔx_i=1，全选无理样点时恒为0；取任意最大段长趋零的分割序列，例如n等分，两种样点选择得到不同极限。因此D在[0,1]上黎曼不可积。关键是直接违反“任意取点都趋向同一个有限极限”，不是从“有无穷多个间断点”直接推断不可积。
+
+最后回看上一页的有界跳跃函数：它有间断点，仍然可积。“有界且只有有限个间断点”是充分条件，其逆命题不能直接使用。本页只讨论普通黎曼定积分，其他积分定义和反常积分留待以后。
+:::
+
+## 定积分的几何意义 {#geometric-meaning .figure-page data-timing="120"}
+
+以下均设 $a<b$；$A_+$、$A_-$ 分别表示 $x$ 轴上、下方图形的面积。
+
+![](figures/sign-cases.svg){.wide-figure width="1120" fig-alt="三个情形：曲线位于横轴上方、下方，以及同时包含上方和下方区域；面积符号分别为A正与A负。"}
+
+:::: {.sign-formulas .larger-formulas}
+::: {.concept-card}
+**$f\ge0$**
+
+$$\displaystyle \int_a^b f(x)\,\mathrm dx=A_+.$$
+:::
+::: {.concept-card}
+**$f\le0$**
+
+$$\displaystyle \int_a^b f(x)\,\mathrm dx=-A_-.$$
+:::
+::: {.concept-card}
+**有正有负**
+
+$$\displaystyle \int_a^b f(x)\,\mathrm dx=A_+-A_-.$$
+:::
+::::
+
+::: {.notes}
+教材明确给出：医用第121页“定积分的几何意义”，图4-4；文科第42页图1.17及说明。安排2分钟，可联系开场的第10讲圆下面积回顾说明非负情形。A+和A-本身都是非负面积，负号来自曲线在x轴下方；本页的几何解释按a<b陈述。自绘图使用可计算的非负曲线及正弦曲线作示意，不用图的像素估算面积。若求整个图形的普通面积，应将A+与A-相加；第13讲的面积例题再作核对。
+:::
+
+## 正负面积相抵 {#example-sine .student-picker-slide data-timing="120"}
+
+::: {.fragment data-fragment-index="0"}
+{{< include student-picker-controls.qmd >}}
+:::
+
+::: {#exm-sine .lecture-env}
+利用几何意义说明 $\displaystyle\int_0^{2\pi}\sin x\,\mathrm dx=0$。
+:::
+
+![](figures/sine-area.svg){.exercise-figure width="1060" fig-alt="正弦函数在零到π上非负，在π到2π上非正，两瓣形状相同，位置相差π。"}
+
+
+::: {#exr-sine-double .lecture-env .sine-followup-exercise .fragment data-fragment-index="0"}
+$\displaystyle\int_0^{2\pi}2\sin x\,\mathrm dx=\,?$
+:::
+
+::: {.notes}
+教材明确给出：医用第122页例4.2及图4-5。安排2分钟，题图属于给定条件，首次即显示。对称对应由sin(x+π)=-sin x说明，只比较普通几何面积，不利用未讲的定积分换元或原函数代端点。不提前说每瓣面积为2，因为这不是仅看图形就已知的数值。本页只需证明两瓣面积相等。
+
+推进一次时，底部追加练习“∫_0^{2π}2sin x dx=?”，右上角幸运生及右下角下载控件同时出现。沿用本讲名单与点名记录。约留30秒口头作答，让学生从上下两瓣同时拉高来判断，仍用几何意义，不提前引用线性性质；题面不显示答案。
+:::
+
+## 由图形求积分 {#practice-geometry .student-picker-slide data-timing="240"}
+
+{{< include student-picker-controls.qmd >}}
+
+::: {.practice-time}
+独立作答 · 3 分钟
+:::
+
+::::: {#exr-geometry .lecture-env}
+根据图形计算：
+
+:::: {.geometry-question-grid}
+::: {.geometry-question}
+[(1)]{.geometry-question-number} $\displaystyle\int_{-1}^{1}|x|\,\mathrm dx$。
+
+![](figures/geometry-absolute.svg){.geometry-question-figure fig-alt="绝对值函数y等于绝对值x在负一到一上的V形，曲线与横轴围成两个直角三角形。"}
+:::
+
+::: {.geometry-question}
+[(2)]{.geometry-question-number} $\displaystyle\int_{-1}^{1}\sqrt{1-x^2}\,\mathrm dx$。
+
+![](figures/geometry-semicircle.svg){.geometry-question-figure fig-alt="函数y等于根号一减x平方在负一到一上的图像，为半径一的上半圆，曲线与横轴围成半圆形区域。"}
+:::
+::::
+:::::
+
+:::: {.lecture-env .solution-block .compact-solution .fragment data-fragment-index="0"}
+[解]{.solution-title}
+
+(1) 两个直角三角形：$\displaystyle\frac12\cdot1\cdot1\times2=\boxed{1}$。
+
+::: {.fragment data-fragment-index="1"}
+(2) 半径为 $1$ 的上半圆：$\displaystyle\frac12\pi\cdot1^2=\boxed{\frac\pi2}$。
+:::
+::::
+
+::: {.notes}
+教材明确给出：医用第122页习题4.1第(2)、(4)题。安排独立作答3分钟、反馈1分钟。两问并排，每幅图放在对应题目下方，显示高度由200px增至300px（150%）。题目与完整图像首次同显；两问答案按序显示。根式图形由x²+y²=1、y≥0确定，不能误认为整圆或半径2的圆。两个函数都非负，所以这里定积分直接等于普通面积。
+:::
+
+## 积分限的两个约定 {#integral-orientation data-timing="120"}
+
+::: {.formula-box}
+**上下限相同：**
+
+$$\displaystyle \int_a^a f(x)\,\mathrm dx=0.$$
+:::
+
+::: {.formula-box}
+**交换上下限：**
+
+$$\displaystyle \int_b^a f(x)\,\mathrm dx=-\int_a^b f(x)\,\mathrm dx.$$
+:::
+
+::: {.key .fragment data-fragment-index="0"}
+例如：$\displaystyle\int_1^0 x^2\,\mathrm dx=-\frac13$。
+:::
+
+::: {.notes}
+教材明确给出：医用第121页说明(2)、(3)。安排2分钟。等限与反向积分是从a<b时的定义延伸出的约定，需有对应区间上的可积性。最后例子使用第一小节的面积结果及正式定义后确认的∫_0^1x²dx=1/3。若a>b，直接套“上方面积为正”的规则会出错；先看积分方向。
+:::
+
+## 线性与常数积分 {#linearity data-timing="180"}
+
+以下各积分均存在，$\alpha$、$\beta$、$c$ 为常数。
+
+::: {#thm-linearity .lecture-env name="线性性质"}
+$$\displaystyle \int_a^b[\alpha f(x)+\beta g(x)]\,\mathrm dx
+=\alpha\int_a^b f(x)\,\mathrm dx+\beta\int_a^b g(x)\,\mathrm dx.$$
+:::
+
+::: {#cor-constant .lecture-env name="常数积分"}
+$$\displaystyle \int_a^b 1\,\mathrm dx=b-a,\qquad
+\boxed{\displaystyle \int_a^b c\,\mathrm dx=c(b-a)}.$$
+:::
+
+::: {.key .fragment data-fragment-index="0"}
+黎曼和中可以提取常数、按项相加；取极限后仍保留这些运算规则。
+:::
+
+::: {.notes}
+教材明确给出：医用第122—123页性质1、2、3；文科第41—42页性质1.6.1、1.6.2。将和差及常数因子合并成线性公式，为教学整理。安排3分钟，以有限和线性说明来源，不展开两段重复的极限证明。常数积分先对a<b由矩形面积或黎曼和得出，a=b与a>b由前页约定扩展；即使c<0也保持公式。强调∫c dx为c乘区间的有向长度，不能只写c。
+:::
+
+## 线性与换限 {#practice-linearity .student-picker-slide data-timing="300"}
+
+{{< include student-picker-controls.qmd >}}
+
+::: {.practice-time}
+独立作答 · 4 分钟
+:::
+
+:::: {#exr-linearity .lecture-env}
+已知
+
+::: {.given-integrals}
+$\displaystyle\int_1^3 f(x)\,\mathrm dx=2$
+
+$\displaystyle\int_1^3 g(x)\,\mathrm dx=-1$
+:::
+
+求下列定积分：
+
+(1) $\displaystyle\int_1^3[3f(x)-2g(x)+1]\,\mathrm dx$；
+
+(2) $\displaystyle\int_3^1[3f(x)-2g(x)+1]\,\mathrm dx$。
+::::
+
+:::: {.lecture-env .solution-block .fragment data-fragment-index="0"}
+[解]{.solution-title}
+
+(1) $\displaystyle 3\times2-2\times(-1)+(3-1)=\boxed{10}$。
+
+::: {.fragment data-fragment-index="1"}
+(2) 交换上下限后变号，得 $\displaystyle\boxed{-10}$。
+:::
+::::
+
+::: {.key .fragment data-fragment-index="2"}
+常数项 $1$ 的积分贡献是区间长度 $2$。
+:::
+
+::: {.notes}
+教学补充：依据医用性质1—3及换限约定编写。安排独立作答4分钟、反馈1分钟。题干给出的定积分存在，可积函数的线性组合可积。第一问常数项为∫_1^3 1dx=2，计算6+2+2=10；第二问整体换限为-10，不必逐项重复计算。所有题干初始完整显示，三次推进依次是第一问、第二问、常数项提醒。
+:::
+
+## 用积分条件确定常数 {#practice-integral-parameter .student-picker-slide .added-practice data-timing="240"}
+
+{{< include student-picker-controls.qmd >}}
+
+::: {.practice-time}
+独立作答 · 3 分钟
+:::
+
+::: {#exr-integral-parameter .lecture-env}
+设 $f$ 在 $[0,2]$ 上可积，且 $\displaystyle\int_0^2 f(x)\,\mathrm dx=3$。
+
+(1) 若 $\displaystyle\int_0^2[af(x)+2]\,\mathrm dx=1$，求常数 $a$。
+
+(2) 求 $\displaystyle\int_2^0[2f(x)-1]\,\mathrm dx$。
+:::
+
+:::: {.lecture-env .solution-block .compact-solution .fragment data-fragment-index="0"}
+[解]{.solution-title}
+
+(1) $3a+2(2-0)=1$，所以 $\boxed{a=-1}$。
+
+::: {.fragment data-fragment-index="1"}
+(2) $\displaystyle\int_2^0[2f(x)-1]\,\mathrm dx=-[2\times3-(2-0)]=\boxed{-4}$。
+:::
+::::
+
+::: {.notes}
+教学补充：依据医用第122—123页性质1—3及换限约定。安排独立作答3分钟、反馈1分钟。第一问把积分等式转为一次方程，常数2的积分为4。第二问对整个积分换限变号，或直接计算2×(-3)−(0−2)=−4。不需要知道f的具体表达式，不使用原函数。
+:::
+
+## 积分区间可以拆开 {#interval-additivity data-timing="180"}
+
+::: {#thm-additivity .lecture-env name="区间可加性"}
+设 $f$ 在包含 $a,b,c$ 的区间上可积，则
+
+$$\displaystyle \boxed{\displaystyle \int_a^b f(x)\,\mathrm dx
+=\int_a^c f(x)\,\mathrm dx+\int_c^b f(x)\,\mathrm dx}.$$
+:::
+
+![](figures/interval-additivity.svg){.wide-figure width="1000" fig-alt="正曲线下方区域在内部点c处分成两块，左侧从a到c，右侧从c到b。"}
+
+::: {.key .fragment data-fragment-index="0"}
+结合换限约定，公式对 $a,b,c$ 的其他排列也成立。
+:::
+
+::: {.notes}
+教材明确给出：医用第123页性质4及说明、图4-6—4-7；文科第42页性质1.6.3。安排3分钟。图仅展示a<c<b；若a<b<c，则先写∫_a^c f=∫_a^b f+∫_b^c f，移项并用-∫_b^c f=∫_c^b f得到同一公式。这里用“包含三点的区间上可积”确保所有相关积分有定义。示意图为自行绘制，不附虚构面积值。
+:::
+
+## 拆分区间求积分 {#practice-additivity .student-picker-slide data-timing="300"}
+
+{{< include student-picker-controls.qmd >}}
+
+::: {.practice-time}
+独立作答 · 4 分钟
+:::
+
+::: {#exr-additivity .lecture-env}
+已知 $f$ 在 $[0,3]$ 上可积，且
+$\displaystyle\int_0^3 f(x)\,\mathrm dx=7$，$\displaystyle\int_1^3 f(x)\,\mathrm dx=5$，求：
+
+(1) $\displaystyle\int_0^1 f(x)\,\mathrm dx$；　
+(2) $\displaystyle\int_3^1[f(x)-2]\,\mathrm dx$。
+:::
+
+:::: {.lecture-env .solution-block .fragment data-fragment-index="0"}
+[解]{.solution-title}
+
+(1) $\displaystyle\int_0^1 f(x)\,\mathrm dx=7-5=\boxed{2}$。
+
+::: {.fragment data-fragment-index="1"}
+(2) $\displaystyle\int_3^1[f(x)-2]\,\mathrm dx=-5-2(1-3)=\boxed{-1}$。
+:::
+::::
+
+::: {.key .fragment data-fragment-index="2"}
+先确定所需区间，再处理积分方向和常数项。
+:::
+
+::: {.notes}
+教学补充：按医用性质3、4和换限约定编写。安排独立作答4分钟、反馈1分钟。第二问既可直接用有向长度1−3，也可先算正向∫_1^3(f−2)=5−4=1再整体变号，接受这两种过程。不可把第一问求出的2误代为∫_1^3 f，也不可对f一项变号而遗漏常数项。7与5为题设积分值，不表示每点函数值。
+:::
+
+## 用定义计算正弦积分 {#example-sine-definition data-timing="300"}
+
+::: {#exm-sine-definition .lecture-env}
+用定积分定义计算 $\displaystyle I=\int_0^\pi\sin x\,\mathrm dx$。
+:::
+
+:::: {.lecture-env .solution-block .compact-solution .fragment data-fragment-index="0"}
+[解]{.solution-title}
+
+**① 取中点**：$\sin x$ 连续。令 $h=\dfrac\pi n$，取 $\xi_i=\left(i-\dfrac12\right)h$。
+
+::: {.fragment data-fragment-index="1"}
+**② 求和相消**：
+
+$$2\sin\dfrac h2\,\sin\xi_i
+=\cos((i-1)h)-\cos(ih).$$
+
+$$S_n=h\sum_{i=1}^n\sin\xi_i
+=\dfrac{h(\cos0-\cos\pi)}{2\sin(h/2)}
+=\dfrac{h}{\sin(h/2)}.$$
+:::
+
+::: {.fragment data-fragment-index="2"}
+**③ 取极限**：利用 $\sin t\sim t$（$t\to0$）。
+
+$$I=\lim\limits_{n\to\infty}S_n
+=2\lim\limits_{h\to0^+}\dfrac{h/2}{\sin(h/2)}
+=\boxed{2}.$$
+:::
+::::
+
+::: {.notes}
+教学补充：放在本讲最后、作业之前，用本讲的可积条件与定义，配合高中三角恒等式和第2—3讲的重要极限，计算∫_0^π sin x dx。安排5分钟。首次显示完整题干；三次推进依次显示取中点、求和相消、取极限。正文保留关键公式，不引入原函数代入上下限或牛顿—莱布尼兹公式。
+
+sin x在[0,π]上连续，故可积，可以选择方便的等分与中点计算。n≥1，h=π/n，分点x_i=ih，样点ξ_i=(i−1/2)h属于本段内部，最大段长λ=h。由cos A−cos B=2sin((A+B)/2)sin((B−A)/2)，得到2sin(h/2)sin ξ_i=cos((i−1)h)−cos(ih)。对i=1,…,n求和，右边逐项相消，只余cos0−cos(nh)=2。因0<h/2≤π/2，sin(h/2)>0，可以相除，得到S_n=h/sin(h/2)。n→∞时h=λ→0，由sin t/t→1，积分为2。取中点是对定义中“任意取点”的应用；可积性已先由连续性保证。
+
+口头核对：n=1、2、4的中点和约为3.1416、2.2214、2.0523，趋近2；这些有限和仍是近似值。前面的正负面积相抵例题只使用两瓣面积相等，本页才算出一瓣面积的具体数值。
+:::
+
+## 作业12 {#homework-concept .homework-page visibility="uncounted" data-timing="0"}
+
+:::: {.homework-columns}
+::: {#hwk-concept .lecture-env}
+1. 根据定义计算 $\displaystyle\int_0^1x\,\mathrm dx$。
+
+   [**提示：** 可用 $\displaystyle\sum_{i=1}^{n}i=\dfrac{n(n+1)}{2}$。]{.hint}
+
+2. 根据几何意义求值：
+
+   1. $\displaystyle\int_0^{2\pi}\cos x\,\mathrm dx$；
+   2. $\displaystyle\int_{-2}^{2}\sqrt{4-x^2}\,\mathrm dx$。
+
+3. 设 $f$ 在 $[0,5]$ 上可积，已知
+
+   $$\displaystyle \int_0^2f(x)\,\mathrm dx=3,\quad
+   \int_2^5f(x)\,\mathrm dx=-1.$$
+
+   求 $\displaystyle\int_5^0[2f(x)+1]\,\mathrm dx$。
+:::
+
+::: {#hwk-properties .lecture-env}
+4. 说明下列极限表示哪个曲边梯形的面积，无需求值：
+
+   $$\displaystyle\lim\limits_{n\to\infty}\sum_{i=1}^{n}\left(2+\dfrac{3i}{n}\right)^2\dfrac3n.$$
+
+:::
+::::
+
+::: {.notes}
+作业12仅考查本讲两个小节，共4道大题，左栏第1—3题、右栏第4题；题间距24px，只列题目、提示和出处，不附答案。第1题为医用例4.1的一次幂变式；第2题改编自医用第122页习题4.1第(1)、(4)题；第3题为线性、换限及区间可加性的综合变式；第4题训练由面积和式识别曲线与区间。原第4、5题的牛顿—莱布尼兹计算题移入作业13。所有题目均可用面积、定义与已讲性质完成。
+:::
+
+```{=html}
+<script id="student-picker-export-source">
+if (window.LectureStudentPicker) window.LectureStudentPicker.captureSource();
+</script>
+```
