@@ -28,6 +28,6 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am a lecturer at the School of Mathematics and Statistics, Hubei Minzu University. I received my Ph.D. in 2025 from the University of Science and Technology of China, under the supervision of Prof. [Lei Zhang](https://faculty.ustc.edu.cn/zhanglei/zh_CN/index/990301/list/index.htm), and my B.S. in 2015 from Southwest University.
+I am a lecturer at the School of Mathematics and Statistics, Hubei Minzu University. I received my Ph.D. in 2025 from the [University of Science and Technology of China](https://www.ustc.edu.cn/), under the supervision of Prof. [Lei Zhang](https://faculty.ustc.edu.cn/zhanglei/zh_CN/index/990301/list/index.htm), and my B.S. in 2015 from [Southwest University](https://www.swu.edu.cn/).
 
 My research interests lie in algebraic geometry, mainly the classification theory of algebraic varieties in positive characteristic — including irregular threefolds and surfaces with numerically trivial canonical divisor, and canonical bundle formulas for fibrations of curves of genus one.
