@@ -32,8 +32,8 @@ I am a lecturer at the School of Mathematics and Statistics, Hubei Minzu Univers
 
 My research interests lie in algebraic geometry, mainly the classification theory of algebraic varieties in positive characteristic — including irregular threefolds and surfaces with numerically trivial canonical divisor, and canonical bundle formulas for fibrations of curves of genus one.
 
-<p class="text-muted">
-  Page views: <span id="busuanzi_value_page_pv">—</span>
-</p>
+<!-- Homepage-only counter. The live total is stored in this hidden element. -->
+
+<span id="busuanzi_value_page_pv" hidden></span>
 
 <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
