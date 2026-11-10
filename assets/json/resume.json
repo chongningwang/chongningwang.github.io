@@ -33,11 +33,7 @@
       "startDate": "2020-11-01",
       "endDate": "2025-01-01",
       "summary": "",
-      "highlights": [
-        "Introduction to Algebraic Geometry (2024, 2020)",
-        "Algebra III (2023, 2022)",
-        "Modern Algebra (2021)"
-      ]
+      "highlights": ["Introduction to Algebraic Geometry (2024, 2020)", "Algebra III (2023, 2022)", "Modern Algebra (2021)"]
     },
     {
       "name": "Zhengzhou No. 4 High School",
@@ -141,6 +137,15 @@
     {
       "language": "English",
       "fluency": "Working proficiency"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Running",
+      "keywords": [
+        "Marathon personal best: 3:56:17 (2025 Hefei Marathon)",
+        "<a href=\"../assets/img/hefei-marathon-2025-certificate.jpg\" target=\"_blank\" rel=\"noopener noreferrer\">Certificate</a>"
+      ]
     }
   ]
 }
